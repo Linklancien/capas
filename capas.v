@@ -14,23 +14,6 @@ mut:
 	team_spell_list [][]Spell
 }
 
-// is it usefull ?
-fn (rule Rules) get_marks_ids(marks_name ...string) []int {
-	mut ids := []int{len: marks_name.len}
-
-	for index, mark in rule.marks_list {
-		for mark_index, name in marks_name {
-			if mark.name == name {
-				ids[mark_index] = index
-				break
-			}
-		}
-	}
-
-	assert -1 !in ids, 'error, ${marks_name} contain a mark that is not register ${ids}'
-	return ids
-}
-
 // B: Spell struct
 // 1: this array is of a len of how many Mark you have
 pub struct Spell {

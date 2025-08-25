@@ -37,11 +37,11 @@ pub struct Spell {
 	Spell_const
 pub mut:
 	// 1:
-	marks []int
+	marks    []int
 	is_ended bool
 }
 
-pub struct Spell_const{
+pub struct Spell_const {
 pub:
 	// UI
 	name        string
@@ -52,11 +52,16 @@ pub:
 }
 
 // C: Mark struct
-struct Mark {
+pub struct Mark {
+pub:
 	// UI
 	name        string
 	description string
 
 	id     int
-	effect fn (mut []Spell)
+	effect fn (int, mut []Spell)
+}
+
+pub fn (mark Mark) do_effect(mut spells_list []Spell) {
+	mark.effect(mark.id, mut spells_list)
 }

@@ -1,26 +1,32 @@
 module capas
 
 fn test_context() {
-	mut rule := Rules{
-		marks_list: [
-			Mark{
-				name:        'PV'
-				description: 'Test of a PV mark'
+	mut rule := rule_create(1)
 
-				id:     0
-				effect: pv_effect
-			},
-		]
+	rule.add_mark(Mark_config{
+		name:        'PV'
+		description: 'Test of a PV mark'
 
-		team_spell_list: [[Spell{
-			marks: [0]
-		}]]
-	}
+		effect: pv_effect
+	})
+	rule.add_spell(0, Spell_config{
+		name: 'Test spell'
+		initiliazed_mark: {
+			'PV': 0
+		}
+	})
+	rule.add_spell(0, Spell_config{
+		name: 'Test spell'
+		initiliazed_mark: {
+			'PV': 2
+		}
+	})
 
 	println(rule.team_spell_list[0])
 	rule.marks_list[0].do_effect(mut rule.team_spell_list[0])
 
 	assert rule.team_spell_list[0][0].is_ended
+	assert !rule.team_spell_list[0][1].is_ended
 }
 
 fn pv_effect(id int, mut spells_list []Spell) {

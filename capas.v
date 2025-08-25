@@ -1,12 +1,12 @@
 module capas
 
-// A: Context struct
+// A: Rules struct
 // B: Spell struct
 // C: Mark struct
 
-// A: Context struct
+// A: Rules struct
 // 1: each mark id is their index in this string
-pub struct Context {
+pub struct Rules {
 mut:
 	// 1:
 	marks_list []Mark
@@ -15,10 +15,10 @@ mut:
 }
 
 // is it usefull ?
-fn (ctx Context) get_marks_ids(marks_name ...string) []int {
+fn (rule Rules) get_marks_ids(marks_name ...string) []int {
 	mut ids := []int{len: marks_name.len}
 
-	for index, mark in ctx.marks_list {
+	for index, mark in rule.marks_list {
 		for mark_index, name in marks_name {
 			if mark.name == name {
 				ids[mark_index] = index
@@ -47,8 +47,8 @@ pub:
 	name        string
 	description string
 
-	cast_fn fn (mut Context)
-	end_fn  fn (mut Context)
+	cast_fn fn (mut Rules)
+	end_fn  fn (mut Rules)
 }
 
 // C: Mark struct

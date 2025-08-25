@@ -1,7 +1,7 @@
 module capas
 
 fn test_context() {
-	mut ctx := Context{
+	mut rule := Rules{
 		marks_list: [
 			Mark{
 				name:        'PV'
@@ -12,13 +12,15 @@ fn test_context() {
 			},
 		]
 
-		team_spell_list: [[Spell{marks: [0]}]]
+		team_spell_list: [[Spell{
+			marks: [0]
+		}]]
 	}
 
-	println(ctx.team_spell_list[0])
-	ctx.marks_list[0].do_effect(mut ctx.team_spell_list[0])
+	println(rule.team_spell_list[0])
+	rule.marks_list[0].do_effect(mut rule.team_spell_list[0])
 
-	assert ctx.team_spell_list[0][0].is_ended
+	assert rule.team_spell_list[0][0].is_ended
 }
 
 fn pv_effect(id int, mut spells_list []Spell) {

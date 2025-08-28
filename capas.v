@@ -58,7 +58,8 @@ pub fn (mut rule Rules) add_spell(team int, cfg_list ...Spell_config) {
 		rule.team_spell_list[team] << Spell{
 			name:        cfg.name
 			description: cfg.description
-
+			
+			on_cast_fn: cfg.on_cast_fn
 			cast_fn: cfg.cast_fn
 			end_fn:  cfg.end_fn
 			marks:   marks
@@ -69,6 +70,8 @@ pub fn (mut rule Rules) add_spell(team int, cfg_list ...Spell_config) {
 // B: Spell
 
 // 1: the string is the name of the mark
+pub interface Spell_interface{}
+
 pub struct Spell_config {
 	Spell_const 
 pub:
@@ -82,8 +85,9 @@ pub:
 	name        string
 	description string
 
-	cast_fn fn (mut Rules) = null_spell_fn
-	end_fn  fn (mut Rules) = null_spell_fn
+	on_cast_fn fn (mut Spell_interface) = null_spell_fn
+	cast_fn []fn (mut Spell_interface)
+	end_fn  fn (mut Spell_interface) = null_spell_fn
 }
 
 // 1: this array is of a len of how many Mark you have
@@ -95,7 +99,7 @@ pub mut:
 	is_ended bool
 }
 
-pub fn null_spell_fn(mut rule Rules) {}
+pub fn null_spell_fn(mut changed Spell_interface) {}
 
 // C: Mark
 pub struct Mark_config {
@@ -111,8 +115,8 @@ struct Mark {
 	id int
 }
 
-pub fn (mark Mark) do_effect(mut spells_list []Spell) {
-	mark.effect(mark.id, mut spells_list)
+pub fn (mark Mark) do_effect(mut spell_list []Spell) {
+	mark.effect(mark.id, mut spell_list)
 }
 
 pub fn null_mark_fn(id int, mut spell_list []Spell) {}

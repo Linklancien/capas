@@ -48,6 +48,7 @@ fn pv_effect(id int, mut spells_list []capas.Spell) {
 	for mut spell in spells_list {
 		if spell.marks[id] == 0 {
 			spell.is_ended = true
+			println('${spell.name} is dead')
 		}
 	}
 }

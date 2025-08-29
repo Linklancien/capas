@@ -22,14 +22,14 @@ fn main() {
 	})
 	app.rule.add_spell(0, capas.Spell_config{
 		name:             'Test spell team 0'
-		on_cast_fn:       basic_attack
+		cast_fn:       [basic_attack]
 		initiliazed_mark: {
 			'PV': 1
 		}
 	})
 	app.rule.add_spell(1, capas.Spell_config{
 		name:             'Test spell team 1'
-		on_cast_fn:       basic_attack
+		cast_fn:       [basic_attack]
 		initiliazed_mark: {
 			'PV': 1
 		}
@@ -38,7 +38,7 @@ fn main() {
 		for mut team in mut app.rule.team_spell_list {
 			app.rule.marks_list[0].do_effect(mut team)
 			for spell in team {
-				spell.on_cast_fn(mut app)
+				spell.cast_fn[0](mut app)
 			}
 		}
 	}
@@ -49,6 +49,7 @@ fn pv_effect(id int, mut spells_list []capas.Spell) {
 		if spell.marks[id] == 0 {
 			spell.is_ended = true
 			println('${spell.name} is dead')
+			// here the target doesn't change so it will always be 'Test spell team 0 is dead'
 		}
 	}
 }

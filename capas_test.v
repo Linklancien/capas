@@ -21,11 +21,11 @@ fn test_context() {
 		}
 	})
 
-	println(rule.team_spell_list[0])
-	rule.marks_list[0].do_effect(mut rule.team_spell_list[0])
+	println(rule.team_deck_list[0])
+	rule.marks_list[0].do_effect(mut rule.team_deck_list[0])
 
-	assert rule.team_spell_list[0][0].is_ended
-	assert !rule.team_spell_list[0][1].is_ended
+	assert rule.team_deck_list[0][0].is_ended
+	assert !rule.team_deck_list[0][1].is_ended
 }
 
 fn pv_effect(id int, mut spells_list []capas.Spell) {

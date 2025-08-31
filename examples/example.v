@@ -35,7 +35,7 @@ fn main() {
 		}
 	})
 	for _ in 0 .. 2 {
-		for mut team in mut app.rule.team_spell_list {
+		for mut team in mut app.rule.team_deck_list {
 			app.rule.marks_list[0].do_effect(mut team)
 			for spell in team {
 				spell.cast_fn[0](mut app)
@@ -56,8 +56,8 @@ fn pv_effect(id int, mut spells_list []capas.Spell) {
 
 fn basic_attack(mut app Spell_interface) {
 	if mut app is App {
-		if app.rule.team_spell_list[app.team_target][app.id_target].marks[app.rule.get_mark_id('PV')] > 0 {
-			app.rule.team_spell_list[app.team_target][app.id_target].marks[app.rule.get_mark_id('PV')] -= 1
+		if app.rule.team_deck_list[app.team_target][app.id_target].marks[app.rule.get_mark_id('PV')] > 0 {
+			app.rule.team_deck_list[app.team_target][app.id_target].marks[app.rule.get_mark_id('PV')] -= 1
 		}
 	} else {
 		panic('Not the expected type ${app}')

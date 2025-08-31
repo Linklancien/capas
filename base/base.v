@@ -78,9 +78,8 @@ fn poison_effect(id int, mut spells_list []capas.Spell) {
 
 // C: Spell function
 
-pub fn attack_with_effect(mut app capas.Spell_interface){
-	if app is capas.Rules{
-
+pub fn attack_with_effect(mut app capas.Spell_interface) {
+	if app is capas.Rules {
 	}
 }
 

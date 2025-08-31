@@ -14,16 +14,16 @@ pub mut:
 	// 1:
 	marks_list []Mark
 	// 2:
-	team_deck_list  [][]Spell
-	team_hand_list  [][]Spell
-	team_permanent_list  [][]Spell
+	team_deck_list      [][]Spell
+	team_hand_list      [][]Spell
+	team_permanent_list [][]Spell
 }
 
 pub fn rule_create(nb_team int) Rules {
 	return Rules{
-		team_deck_list:  [][]Spell{len: nb_team}
-		team_hand_list:  [][]Spell{len: nb_team}
-		team_permanent_list : [][]Spell{len: nb_team}
+		team_deck_list:      [][]Spell{len: nb_team}
+		team_hand_list:      [][]Spell{len: nb_team}
+		team_permanent_list: [][]Spell{len: nb_team}
 	}
 }
 
@@ -74,7 +74,7 @@ pub fn (mut rule Rules) add_spell(team int, cfg_list ...Spell_config) {
 pub fn (mut rule Rules) add_marks_to_spell(team int, id int, add_marks map[string]int) {
 	for name in add_marks.keys() {
 		mark_id := rule.get_mark_id(name)
-		rule.team_permanent_list [team][id].marks[mark_id] += add_marks[name]
+		rule.team_permanent_list[team][id].marks[mark_id] += add_marks[name]
 	}
 }
 

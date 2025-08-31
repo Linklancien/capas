@@ -17,6 +17,8 @@ pub mut:
 	team_deck_list      [][]Spell
 	team_hand_list      [][]Spell
 	team_permanent_list [][]Spell
+
+	team_graveyard_list [][]Spell
 }
 
 pub fn rule_create(nb_team int) Rules {
@@ -24,6 +26,7 @@ pub fn rule_create(nb_team int) Rules {
 		team_deck_list:      [][]Spell{len: nb_team}
 		team_hand_list:      [][]Spell{len: nb_team}
 		team_permanent_list: [][]Spell{len: nb_team}
+		team_graveyard_list: [][]Spell{len: nb_team}
 	}
 }
 

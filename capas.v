@@ -66,6 +66,8 @@ pub fn (mut rule Rules) add_spell(team int, cfg_list ...Spell_config) {
 			on_cast_fn: cfg.on_cast_fn
 			cast_fn:    cfg.cast_fn
 			end_fn:     cfg.end_fn
+
+			init_marks: marks.clone()
 			marks:      marks
 		}
 	}
@@ -99,6 +101,8 @@ pub:
 	on_cast_fn fn (mut Spell_interface) = null_spell_fn
 	cast_fn    []fn (mut Spell_interface)
 	end_fn     fn (mut Spell_interface) = null_spell_fn
+
+	init_marks []int
 }
 
 // 1: this array is of a len of how many Mark you have

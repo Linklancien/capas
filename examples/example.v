@@ -22,14 +22,14 @@ fn main() {
 	})
 	app.rule.add_spell(0, capas.Spell_config{
 		name:             'Test spell team 0'
-		cast_fn:       [basic_attack]
+		cast_fn:          [basic_attack]
 		initiliazed_mark: {
 			'PV': 1
 		}
 	})
 	app.rule.add_spell(1, capas.Spell_config{
 		name:             'Test spell team 1'
-		cast_fn:       [basic_attack]
+		cast_fn:          [basic_attack]
 		initiliazed_mark: {
 			'PV': 1
 		}

@@ -67,6 +67,13 @@ pub fn (mut rule Rules) add_spell(team int, cfg_list ...Spell_config) {
 	}
 }
 
+pub fn (mut rule Rules) add_marks_to_spell(team int, id int, add_marks map[string]int) {
+	for name in add_marks.keys() {
+		mark_id := rule.get_mark_id(name)
+		rule.team_spell_list[team][id].marks[mark_id] += add_marks[name]
+	}
+}
+
 // B: Spell
 
 // 1: the string is the name of the mark

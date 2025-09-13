@@ -17,15 +17,15 @@ The Rules fields are as followed:
 marks_list which is an exaustive list of all the possible marks used.  
 You can add a mark using the ``add_mark(mark_cfg)`` function and by giving it a Mark_config
 
-The struct Rules, contain all the players' [spells]()
-- deck, all the [spells]() possible to draw
-- hand, all the [spells]() playable by the player in a turn
-- permanent, all the [spells]() that have been played
-- graveyard, all the [spells]() that have been used
+The struct Rules, contain all the players' [spells](#spells)
+- deck, all the [spells](#spells) possible to draw
+- hand, all the [spells](#spells) playable by the player in a turn
+- permanent, all the [spells](#spells) that have been played
+- graveyard, all the [spells](#spells) that have been used
 
 ## Spells
 
-In this module, [spells]() are anything a player interacts with.  
+In this module, [spells](#spells) are anything a player interacts with.  
 Some effects are built-in:
 - if a Spell.is_ended is true and the spell is in the permanent list, it will be placed in the graveyard
 

@@ -1,5 +1,5 @@
 # capas
-A v module to handle complex Ability système
+A v module to handle complex Ability systems.
 
 
 # API

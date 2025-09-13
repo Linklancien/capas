@@ -5,11 +5,11 @@ A v module to handle complex Ability système
 # API
 To use this module, you need to know the following:
 
-The struct Rules, handle the palyers "spells"
+The struct Rules, handles the players' "spells"
 - deck, all the "spells" possible to draw
 - hand, all the "spells" playable
-- permanent, all the "spells" that had been played
-- graveyard, all the "spells" used
+- permanent, all the "spells" that have been played
+- graveyard, all the "spells" that have been used
 
 ## Spells
 
@@ -18,7 +18,7 @@ Some effect are build-in
 - if a Spell.is_ended is true and the spell is in the permanent list, it will be placed in the graveyard
 
 
-## MArks
+## Marks
 
 In this module a mark is something attach to a spell
 It can be used to represent 

@@ -13,7 +13,7 @@ The struct Rules, handles the players' "spells"
 
 ## Spells
 
-In this module, a "spells" design every thing a player interact with
+In this module, ["spells"](## Spells) are anything every thing a player interacts with
 Some effect are build-in
 - if a Spell.is_ended is true and the spell is in the permanent list, it will be placed in the graveyard
 

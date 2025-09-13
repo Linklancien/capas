@@ -20,9 +20,9 @@ Some effects are build-in:
 
 ## Marks
 
-In this module a mark is something attach to a spell.  
+In this module a mark is something attached to a spell.  
 It can be used to represent:
-- a quantity like something pv, shield or else
+- a quantity like something hp, shield or else
 - a modifier that you can check to
 - something else as you which
 

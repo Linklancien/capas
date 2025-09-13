@@ -14,14 +14,14 @@ The struct Rules, handles the players' "spells"
 ## Spells
 
 In this module, "spells" are anything every thing a player interacts with.  
-Some effect are build-in
+Some effects are build-in:
 - if a Spell.is_ended is true and the spell is in the permanent list, it will be placed in the graveyard
 
 
 ## Marks
 
-In this module a mark is something attach to a spell
-It can be used to represent 
+In this module a mark is something attach to a spell.  
+It can be used to represent:
 - a quantity like something pv, shield or else
 - a modifier that you can check to
 - something else as you which

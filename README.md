@@ -29,7 +29,7 @@ You can add a [spells](#spells) using the ``add_spell(team, cfg_list)`` function
 
 In this module, [spells](#spells) are anything a player interacts with.  
 Some effects are built-in:
-- if a Spell.is_ended is true and the spell is in the permanent list, it will be placed in the graveyard
+- if a Spell.is_ended is true and the spell is in the permanent list, it will be placed in the graveyard when you call Rules.update_permanent()
 
 
 ## Marks

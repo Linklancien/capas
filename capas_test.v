@@ -35,3 +35,24 @@ fn pv_effect(id int, mut spells_list []capas.Spell) {
 		}
 	}
 }
+
+fn test_update_permanent(){
+	mut rule := capas.rule_create(1)
+
+	rule.add_spell(0, capas.Spell_config{
+		name:             'Test spell'
+	}, capas.Spell_config{
+		name:             'Test spell'
+	})
+
+	rule.team_permanent_list = rule.team_deck_list.clone()
+	rule.team_deck_list.clear()
+
+	assert rule.team_deck_list.len == 0, ".clear didn't work? ${rule.team_deck_list}"
+	
+	rule.team_permanent_list[0][0].is_ended = true
+	rule.update_permanent()
+
+	assert rule.team_permanent_list.len == 1, "update_permanent issue, ${rule.team_permanent_list}"
+	assert rule.team_graveyard_list.len == 1, "update_permanent issue, ${rule.team_graveyard_list}"
+}

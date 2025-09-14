@@ -83,6 +83,25 @@ pub fn (mut rule Rules) add_marks_to_spell(team int, id int, add_marks map[strin
 	}
 }
 
+pub fn (mut rule Rules)update_permanent() {
+	for id_player in 0..rule.team_permanent_list.len{
+		total_len := rule.team_permanent_list[id_player].len
+		mut new_permanent := []Spell{cap: total_len}
+		mut new_graveyard := []Spell{}
+		for i in 0..total_len{
+			spell := rule.team_permanent_list[id_player].pop()
+			if spell.is_ended{
+				new_graveyard << spell
+			}
+			else{
+				new_permanent << spell
+			}
+		}
+		rule.team_permanent_list[id_player] << new_permanent
+		rule.team_graveyard_list[id_player] << new_graveyard
+	}
+}
+
 // B: Spell
 
 // 1: the string is the name of the mark

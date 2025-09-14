@@ -35,7 +35,7 @@ pub fn init_rule_base(nb_team int) capas.Rules {
 		effect:      regen_effect
 	}, capas.Mark_config{
 		name:        'POISON'
-		description: 'Reduce the pv mark as much as the poison mark quantity '
+		description: 'Reduce the pv mark as much as the poison mark quantity'
 		effect:      pv_effect
 	})
 

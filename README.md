@@ -18,12 +18,12 @@ marks_list which is an exaustive list of all the possible marks used.
 You can add a mark using the ``Rules.add_mark(mark_cfg)`` function and by giving it some ``Mark_config``
 
 The rest of the Rules fields, contain all the players' [spells](#spells) 
-> [!CAUTION]
-> This is subject to changes
 - deck, for [spells](#spells) possible to draw
 - hand, for [spells](#spells) playable by the player in a turn
 - permanent, for [spells](#spells) that have been played
 - graveyard, for [spells](#spells) that have been used
+> [!CAUTION]
+> This is subject to changes
 
 You can add a [spells](#spells) using the ``Rules.add_spell(team, cfg_list)`` function and by giving it an index for which team is this spell and some ``Spell_config``
 

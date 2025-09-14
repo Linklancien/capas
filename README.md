@@ -58,7 +58,7 @@ The base sub-module ``capas.base`` provide some predefined marks such as:
 - `SHIELD`; Protects the HP [mark](#marks) of direct attack (excluding poison)
 - `FLAT REDUCTION DAMAGE`; Reduce an attack by the [mark](#marks) quantity
 - `STUN`; Incapacitates the spell for as long as the [mark](#marks) quantity, [decreasing](#decreasing)
-- `REGEN` Regenerate the HP [mark](#marks) as much as the regen [mark](#marks) quantity, [decreasing](#decreasing)
+- `REGEN`; Regenerate the HP [mark](#marks) as much as the regen [mark](#marks) quantity, [decreasing](#decreasing)
 - `POISON`; Reduces the HP [mark](#marks) as much as the poison [mark](#marks) quantity, [decreasing](#decreasing)
 
 ## Decreasing

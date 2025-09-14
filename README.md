@@ -55,7 +55,7 @@ It can be used to:
 # base module
 The base sub-module ``capas.base`` provide some predefined mark such as:
 - `PV`; Count the pv of a spell, if the spell's pv is == 0, the spell is mark as ended so negative pv will end up as indestructibility
-- `SHIELD`, Protect the pv mark of direct attack (excluding poison)
+- `SHIELD`; Protect the pv mark of direct attack (excluding poison)
 - `FLAT REDUCTION DAMAGE`; Reduce en attack by the mark quantity
 - `Stun`; Incapacitate the spell for as long as the mark quantity
 - `REGEN` Regenerate the pv mark as much as the regen mark quantity

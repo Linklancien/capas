@@ -27,7 +27,7 @@ pub fn init_rule_base(nb_team int) capas.Rules {
 		name:        'FLAT REDUCTION DAMAGE'
 		description: 'Reduce en attack by the mark quantity'
 	}, capas.Mark_config{
-		name:        'Stun'
+		name:        'STUN'
 		description: 'Incapacitate the spell for as long as the mark quantity'
 	}, capas.Mark_config{
 		name:        'REGEN'

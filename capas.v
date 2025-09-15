@@ -17,7 +17,6 @@ pub mut:
 	team_deck_list      [][]Spell
 	team_hand_list      [][]Spell
 	team_permanent_list [][]Spell
-
 	team_graveyard_list [][]Spell
 }
 
@@ -83,7 +82,16 @@ pub fn (mut rule Rules) add_marks_to_spell(team int, id int, add_marks map[strin
 	}
 }
 
-pub fn (mut rule Rules)update_permanent() {
+pub fn (mut rule Rules) draw(team int, number int){
+	rule.team_hand_list[team] << rule.team_deck_list[team]#[-number..]
+	rule.team_deck_list[team] = rule.team_deck_list[team]#[..-number]
+}
+
+pub fn (mut rule Rules) draw_rand(team int, number int){
+	panic('NOT IMPLEMENTED')
+}
+
+pub fn (mut rule Rules) update_permanent() {
 	for id_player in 0..rule.team_permanent_list.len{
 		total_len := rule.team_permanent_list[id_player].len
 		mut new_permanent := []Spell{cap: total_len}

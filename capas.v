@@ -33,10 +33,8 @@ pub fn rule_create(nb_team int) Rules {
 pub fn (mut rule Rules) add_mark(mark_cfg_list ...Mark_config) {
 	for cfg in mark_cfg_list {
 		rule.marks_list << Mark{
-			name:        cfg.name
-			description: cfg.description
-
-			effect: cfg.effect
+			Mark_config: cfg
+			
 			id:     rule.marks_list.len
 		}
 	}
@@ -62,14 +60,8 @@ pub fn (mut rule Rules) add_spell(team int, cfg_list ...Spell_config) {
 		}
 
 		rule.team_deck_list[team] << Spell{
-			name:        cfg.name
-			description: cfg.description
-
-			on_cast_fn: cfg.on_cast_fn
-			cast_fn:    cfg.cast_fn
-			end_fn:     cfg.end_fn
-
-			init_marks: marks.clone()
+			Spell_const: cfg.Spell_const
+			
 			marks:      marks
 		}
 	}
@@ -131,8 +123,6 @@ pub:
 	on_cast_fn fn (mut Spell_interface) = null_spell_fn
 	cast_fn    []fn (mut Spell_interface)
 	end_fn     fn (mut Spell_interface) = null_spell_fn
-
-	init_marks []int
 }
 
 // 1: this array is of a len of how many Mark you have
@@ -145,6 +135,14 @@ pub mut:
 }
 
 pub fn null_spell_fn(mut changed Spell_interface) {}
+
+pub fn (spell Spell) clone() Spell{
+	return Spell{
+		Spell_const: spell.Spell_const
+		
+		marks:      spell.marks.clone()
+	}
+}
 
 // C: Mark
 pub struct Mark_config {

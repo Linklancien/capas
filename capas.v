@@ -1,5 +1,6 @@
 module capas
 
+import rand
 // A: Rules struct
 // B: Spell
 // C: Mark
@@ -80,7 +81,23 @@ pub fn (mut rule Rules) draw(team int, number int){
 }
 
 pub fn (mut rule Rules) draw_rand(team int, number int){
-	panic('NOT IMPLEMENTED')
+	// Not perfect but a least working
+	elems := rand.choose(rule.team_deck_list[team], number) or {panic('RAND FAILED')}
+
+	mut new_deck := []Spell{}
+	mut total := 0
+	outer : for deck_spell in rule.team_deck_list[team]{
+		for elem in elems{
+			if deck_spell.name == elem.name && total != elems.len{
+				total += 1
+				continue outer
+			}
+			new_deck << deck_spell
+		}
+	}
+
+	rule.team_hand_list[team] << elems
+	rule.team_deck_list[team] = new_deck
 }
 
 pub fn (mut rule Rules) update_permanent() {
@@ -88,7 +105,7 @@ pub fn (mut rule Rules) update_permanent() {
 		total_len := rule.team_permanent_list[id_player].len
 		mut new_permanent := []Spell{cap: total_len}
 		mut new_graveyard := []Spell{}
-		for i in 0..total_len{
+		for _ in 0..total_len{
 			spell := rule.team_permanent_list[id_player].pop()
 			if spell.is_ended{
 				new_graveyard << spell

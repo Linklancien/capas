@@ -79,3 +79,29 @@ fn test_draw(){
 	assert rule.team_deck_list[0].len == 0, 'len != 1, ${rule}'
 	assert rule.team_hand_list[0].len == 2, 'len != 1, ${rule}'
 }
+
+fn test_draw_rand(){
+	names := [['Test spell 1', 'Test spell 2'], ['Test spell 1', 'Test spell 1']]
+	for name in names{
+		mut rule := capas.rule_create(1)
+
+		rule.add_spell(0, capas.Spell_config{
+			name: name[0]
+		}, capas.Spell_config{
+			name: name[1]
+		})
+
+		assert rule.team_deck_list[0].len == 2, 'len != 2, ${name}'
+		assert rule.team_hand_list[0].len == 0, 'len != 0, ${name}'
+
+		rule.draw_rand(0, 1)
+
+		assert rule.team_deck_list[0].len == 1, 'len != 1, ${name}'
+		assert rule.team_hand_list[0].len == 1, 'len != 1, ${name}'
+
+		rule.draw_rand(0, 1)
+
+		assert rule.team_deck_list[0].len == 0, 'len != 0, ${name}'
+		assert rule.team_hand_list[0].len == 2, 'len != 2, ${name}'
+	}
+}

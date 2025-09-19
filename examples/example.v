@@ -1,13 +1,13 @@
 module main
 
 import linklancien.capas { Rules, Spell_interface }
+import os { input }
 
 struct App {
 mut:
 	rule Rules
 
-	team_target int
-	id_target   int
+	team_turn int
 }
 
 fn main() {
@@ -19,6 +19,11 @@ fn main() {
 		description: 'Test of a PV mark'
 
 		effect: pv_effect
+	}, capas.Mark_config{
+		name:        'TARGET'
+		description: 'Used to store a spell target'
+
+		effect: target_effect
 	})
 	app.rule.add_spell(0, capas.Spell_const{
 		name:             'Test spell team 0'
@@ -34,13 +39,36 @@ fn main() {
 			'PV': 1
 		}
 	})
-	for _ in 0 .. 2 {
-		for mut team in mut app.rule.team_deck_list {
-			app.rule.marks_list[0].do_effect(mut team)
-			for spell in team {
-				spell.cast_fn[0](mut app)
-			}
-		}
+	app.rule.draw(0, 1)
+	app.rule.draw(1, 1)
+	app.game()
+}
+
+fn (mut app App) game(){
+	for {
+		app.turn()
+		app.team_turn = (app.team_turn + 1) % 2
+	}
+}
+
+fn (mut app App) turn() {
+	id := app.rule.get_mark_id('TARGET')
+	other_team_id := (app.team_turn + 1) % 2
+	max_target_id := app.rule.team_permanent_list[other_team_id].len
+
+	for mut spell in mut app.rule.team_permanent_list[app.team_turn] {
+		spell.marks[id] = os.input('Select a target for ${spell.name}, max: ${max_target_id}').int()
+		spell.cast_fn[0](mut spell, mut app)
+	}
+
+	app.rule.all_marks_do_effect(other_team_id)
+	app.rule.update_permanent()
+	println('END TURN')
+}
+
+fn target_effect(id int, mut spells_list []capas.Spell) {
+	for mut spell in spells_list {
+		spell.marks[id] == 0
 	}
 }
 
@@ -54,10 +82,13 @@ fn pv_effect(id int, mut spells_list []capas.Spell) {
 	}
 }
 
-fn basic_attack(mut app Spell_interface) {
+fn basic_attack(mut self capas.Spell, mut app Spell_interface) {
 	if mut app is App {
-		if app.rule.team_deck_list[app.team_target][app.id_target].marks[app.rule.get_mark_id('PV')] > 0 {
-			app.rule.team_deck_list[app.team_target][app.id_target].marks[app.rule.get_mark_id('PV')] -= 1
+		target := self.marks[app.rule.get_mark_id('TARGET')]
+		pv_id := app.rule.get_mark_id('PV')
+		other_team_id := (app.team_turn + 1) % 2
+		if app.rule.team_deck_list[other_team_id][target].marks[pv_id] > 0 {
+			app.rule.team_deck_list[other_team_id][target].marks[pv_id] -= 1
 		}
 	} else {
 		panic('Not the expected type ${app}')

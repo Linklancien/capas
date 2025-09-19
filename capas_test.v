@@ -57,7 +57,7 @@ fn test_update_permanent() {
 	assert rule.team_graveyard_list.len == 1, 'update_permanent issue, ${rule.team_graveyard_list}'
 }
 
-fn test_draw(){
+fn test_draw() {
 	mut rule := capas.rule_create(1)
 
 	rule.add_spell(0, capas.Spell_const{
@@ -80,9 +80,9 @@ fn test_draw(){
 	assert rule.team_hand_list[0].len == 2, 'len != 1, ${rule}'
 }
 
-fn test_draw_rand(){
+fn test_draw_rand() {
 	names := [['Test spell 1', 'Test spell 2'], ['Test spell 1', 'Test spell 1']]
-	for name in names{
+	for name in names {
 		mut rule := capas.rule_create(1)
 
 		rule.add_spell(0, capas.Spell_const{

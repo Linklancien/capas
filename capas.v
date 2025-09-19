@@ -152,6 +152,12 @@ pub fn null_spell_fn(mut changed Spell_interface) {}
 pub fn (spell Spell) clone() Spell{
 	return Spell{
 		Spell_const: spell.Spell_const
+	}
+}
+
+pub fn (spell Spell) clone_perfect() Spell{
+	return Spell{
+		Spell_const: spell.Spell_const
 		
 		marks:      spell.marks.clone()
 	}

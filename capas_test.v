@@ -9,12 +9,12 @@ fn test_context() {
 
 		effect: pv_effect
 	})
-	rule.add_spell(0, capas.Spell_config{
+	rule.add_spell(0, capas.Spell_const{
 		name:             'Test spell'
 		initiliazed_mark: {
 			'PV': 0
 		}
-	}, capas.Spell_config{
+	}, capas.Spell_const{
 		name:             'Test spell'
 		initiliazed_mark: {
 			'PV': 2
@@ -39,9 +39,9 @@ fn pv_effect(id int, mut spells_list []capas.Spell) {
 fn test_update_permanent() {
 	mut rule := capas.rule_create(1)
 
-	rule.add_spell(0, capas.Spell_config{
+	rule.add_spell(0, capas.Spell_const{
 		name: 'Test spell'
-	}, capas.Spell_config{
+	}, capas.Spell_const{
 		name: 'Test spell'
 	})
 
@@ -60,9 +60,9 @@ fn test_update_permanent() {
 fn test_draw(){
 	mut rule := capas.rule_create(1)
 
-	rule.add_spell(0, capas.Spell_config{
+	rule.add_spell(0, capas.Spell_const{
 		name: 'Test spell 1'
-	}, capas.Spell_config{
+	}, capas.Spell_const{
 		name: 'Test spell 2'
 	})
 
@@ -85,9 +85,9 @@ fn test_draw_rand(){
 	for name in names{
 		mut rule := capas.rule_create(1)
 
-		rule.add_spell(0, capas.Spell_config{
+		rule.add_spell(0, capas.Spell_const{
 			name: name[0]
-		}, capas.Spell_config{
+		}, capas.Spell_const{
 			name: name[1]
 		})
 

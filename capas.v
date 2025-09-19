@@ -51,7 +51,7 @@ pub fn (rule Rules) get_mark_id(name string) int {
 }
 
 // b: Rules fn concerning Spell
-pub fn (mut rule Rules) add_spell(team int, cfg_list ...Spell_config) {
+pub fn (mut rule Rules) add_spell(team int, cfg_list ...Spell_const) {
 	for cfg in cfg_list {
 		mut marks := []int{len: rule.marks_list.len}
 
@@ -61,7 +61,7 @@ pub fn (mut rule Rules) add_spell(team int, cfg_list ...Spell_config) {
 		}
 
 		rule.team_deck_list[team] << Spell{
-			Spell_const: cfg.Spell_const
+			Spell_const: cfg
 			
 			marks:      marks
 		}
@@ -121,17 +121,10 @@ pub fn (mut rule Rules) update_permanent() {
 
 // B: Spell
 
-// 1: the string is the name of the mark
 pub interface Spell_interface {}
 
-pub struct Spell_config {
-	Spell_const
-pub:
-	// 1:
-	initiliazed_mark map[string]int
-}
-
-struct Spell_const {
+// 1: the string is the name of the mark
+pub struct Spell_const {
 pub:
 	// UI
 	name        string
@@ -140,6 +133,9 @@ pub:
 	on_cast_fn fn (mut Spell_interface) = null_spell_fn
 	cast_fn    []fn (mut Spell_interface)
 	end_fn     fn (mut Spell_interface) = null_spell_fn
+
+	// 1:
+	initiliazed_mark map[string]int
 }
 
 // 1: this array is of a len of how many Mark you have

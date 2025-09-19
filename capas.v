@@ -108,6 +108,11 @@ pub fn (mut rule Rules) draw_rand(team int, number int) {
 	rule.team_deck_list[team] = new_deck
 }
 
+pub fn (mut rule Rules) play_ordered(team int, number int){
+	rule.team_permanent_list[team] << rule.team_hand_list[team]#[-number..]
+	rule.team_hand_list[team] = rule.team_hand_list[team]#[..-number]
+}
+
 pub fn (mut rule Rules) update_permanent() {
 	for id_player in 0 .. rule.team_permanent_list.len {
 		total_len := rule.team_permanent_list[id_player].len

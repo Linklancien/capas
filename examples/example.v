@@ -30,6 +30,7 @@ fn main() {
 		cast_fn:          [basic_attack]
 		initiliazed_mark: {
 			'PV': 1
+			'TARGET': -1
 		}
 	})
 	app.rule.add_spell(1, capas.Spell_const{
@@ -37,6 +38,7 @@ fn main() {
 		cast_fn:          [basic_attack]
 		initiliazed_mark: {
 			'PV': 1
+			'TARGET': -1
 		}
 	})
 	
@@ -66,7 +68,7 @@ fn (mut app App) turn() {
 	max_target_id := app.rule.team_permanent_list[other_team_id].len - 1
 
 	for mut spell in mut app.rule.team_permanent_list[app.team_turn] {
-		spell.marks[id] = os.input('Select a target for ${spell.name} (max: ${max_target_id}) : ').int()
+		spell.marks[id] = os.input('Select a target for ${spell.name} (-1 to not target, max: ${max_target_id}) : ').int()
 		spell.cast_fn[0](mut spell, mut app)
 	}
 
@@ -77,7 +79,7 @@ fn (mut app App) turn() {
 
 fn target_effect(id int, mut spells_list []capas.Spell) {
 	for mut spell in spells_list {
-		spell.marks[id] == 0
+		spell.marks[id] == -1
 	}
 }
 
@@ -94,10 +96,12 @@ fn pv_effect(id int, mut spells_list []capas.Spell) {
 fn basic_attack(mut self capas.Spell, mut app Spell_interface) {
 	if mut app is App {
 		target := self.marks[app.rule.get_mark_id('TARGET')]
-		pv_id := app.rule.get_mark_id('PV')
-		other_team_id := (app.team_turn + 1) % 2
-		if app.rule.team_permanent_list[other_team_id][target].marks[pv_id] > 0 {
-			app.rule.team_permanent_list[other_team_id][target].marks[pv_id] -= 1
+		if target >= 0{
+			pv_id := app.rule.get_mark_id('PV')
+			other_team_id := (app.team_turn + 1) % 2
+			if app.rule.team_permanent_list[other_team_id][target].marks[pv_id] > 0 {
+				app.rule.team_permanent_list[other_team_id][target].marks[pv_id] -= 1
+			}
 		}
 	} else {
 		panic('Not the expected type ${app}')

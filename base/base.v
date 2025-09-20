@@ -78,15 +78,20 @@ fn poison_effect(id int, mut spells_list []capas.Spell) {
 
 // C: Spell function
 
-pub fn attack_with_effect(mut app capas.Spell_interface) {
-	if app is capas.Rules {
+pub fn attack(damage int, mut self capas.Spell, mut rule capas.Spell_interface) {
+	if rule is capas.Rules {
+		target := self.marks[rule.get_mark_id('TARGET')]
+		if target >= 0{
+			other_team_id := (team_turn + 1) % 2
+			inflict_damage(damage, mut rule.team_permanent_list[other_team_id][target])
+		}
 	}
 }
 
 // 1: handle flat reduction
 // 2: handle shield
 // 3: handle pv
-pub fn inflict_damage(damage int, spell capas.Spell) {
+pub fn inflict_damage(damage int,mut spell capas.Spell) {
 	// 1:
 	mut dmg := damage - spell.marks[id_flat_reduce_dmg]
 	// 2:

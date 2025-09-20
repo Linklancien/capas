@@ -108,7 +108,7 @@ pub fn (mut rule Rules) draw_rand(team int, number int) {
 	rule.team_deck_list[team] = new_deck
 }
 
-pub fn (mut rule Rules) play_ordered(team int, number int){
+pub fn (mut rule Rules) play_ordered(team int, number int) {
 	rule.team_permanent_list[team] << rule.team_hand_list[team]#[-number..]
 	rule.team_hand_list[team] = rule.team_hand_list[team]#[..-number]
 }
@@ -134,8 +134,6 @@ pub fn (mut rule Rules) update_permanent() {
 // B: Spell
 
 pub interface Spell_interface {
-mut:
-	rule Rules
 }
 
 type Spell_fn = fn (mut Spell, mut Spell_interface)

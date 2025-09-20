@@ -1,6 +1,6 @@
 module main
 
-import linklancien.capas { Rules, Spell_interface }
+import linklancien.capas { Mark_config, Rules, Spell, Spell_const, Spell_interface }
 import os { input }
 
 struct App {
@@ -14,48 +14,48 @@ fn main() {
 	mut app := App{}
 	app.rule = capas.rule_create(2)
 
-	app.rule.add_mark(capas.Mark_config{
+	app.rule.add_mark(Mark_config{
 		name:        'PV'
 		description: 'Test of a PV mark'
 
 		effect: pv_effect
-	}, capas.Mark_config{
+	}, Mark_config{
 		name:        'TARGET'
 		description: 'Used to store a spell target'
 
 		effect: target_effect
 	})
-	app.rule.add_spell(0, capas.Spell_const{
+	app.rule.add_spell(0, Spell_const{
 		name:             'Test spell team 0'
 		cast_fn:          [basic_attack]
 		initiliazed_mark: {
-			'PV': 1
+			'PV':     1
 			'TARGET': -1
 		}
 	})
-	app.rule.add_spell(1, capas.Spell_const{
+	app.rule.add_spell(1, Spell_const{
 		name:             'Test spell team 1'
 		cast_fn:          [basic_attack]
 		initiliazed_mark: {
-			'PV': 1
+			'PV':     1
 			'TARGET': -1
 		}
 	})
-	
+
 	app.init()
 
 	app.game()
 }
 
-fn (mut app App) init(){
-	for team in 0..2{
+fn (mut app App) init() {
+	for team in 0 .. 2 {
 		app.rule.draw(team, 1)
 		app.rule.play_ordered(team, 1)
 	}
 }
 
-fn (mut app App) game(){
-	for app.rule.team_permanent_list[app.team_turn].len > 0{
+fn (mut app App) game() {
+	for app.rule.team_permanent_list[app.team_turn].len > 0 {
 		app.turn()
 		app.team_turn = (app.team_turn + 1) % 2
 	}
@@ -68,7 +68,7 @@ fn (mut app App) turn() {
 	max_target_id := app.rule.team_permanent_list[other_team_id].len - 1
 
 	for mut spell in mut app.rule.team_permanent_list[app.team_turn] {
-		spell.marks[id] = os.input('Select a target for ${spell.name} (-1 to not target, max: ${max_target_id}) : ').int()
+		spell.marks[id] = input('Select a target for ${spell.name} (-1 to not target, max: ${max_target_id}) : ').int()
 		spell.cast_fn[0](mut spell, mut app)
 	}
 
@@ -77,13 +77,13 @@ fn (mut app App) turn() {
 	println('END TURN')
 }
 
-fn target_effect(id int, mut spells_list []capas.Spell) {
+fn target_effect(id int, mut spells_list []Spell) {
 	for mut spell in spells_list {
 		spell.marks[id] == -1
 	}
 }
 
-fn pv_effect(id int, mut spells_list []capas.Spell) {
+fn pv_effect(id int, mut spells_list []Spell) {
 	for mut spell in spells_list {
 		if spell.marks[id] == 0 {
 			spell.is_ended = true
@@ -93,10 +93,10 @@ fn pv_effect(id int, mut spells_list []capas.Spell) {
 	}
 }
 
-fn basic_attack(mut self capas.Spell, mut app Spell_interface) {
+fn basic_attack(mut self Spell, mut app Spell_interface) {
 	if mut app is App {
 		target := self.marks[app.rule.get_mark_id('TARGET')]
-		if target >= 0{
+		if target >= 0 {
 			pv_id := app.rule.get_mark_id('PV')
 			other_team_id := (app.team_turn + 1) % 2
 			if app.rule.team_permanent_list[other_team_id][target].marks[pv_id] > 0 {

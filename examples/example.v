@@ -63,12 +63,14 @@ fn (mut app App) game() {
 }
 
 fn (mut app App) turn() {
-	id := app.rule.get_mark_id('TARGET')
+	target_id := app.rule.get_mark_id('TARGET')
 	other_team_id := (app.team_turn + 1) % 2
 	max_target_id := app.rule.team_permanent_list[other_team_id].len - 1
 
 	for mut spell in mut app.rule.team_permanent_list[app.team_turn] {
-		spell.marks[id] = input('Select a target for ${spell.name} (-1 to not target, max: ${max_target_id}) : ').int()
+		promp := input('Select a target for ${spell.name} (-1 to target none, max: ${max_target_id}) : ').int()
+		spell.marks[target_id] = if promp <= max_target_id{promp} else{println('VALUE incorrect')
+		-1}
 		spell.cast_fn[0](mut spell, mut app)
 	}
 

@@ -11,6 +11,7 @@ import rand
 // c: Rules fn for team gestion
 
 // 1: each mark id is their index in this string
+// 2: all lists stocking spell
 pub struct Rules {
 pub mut:
 	// 1:
@@ -134,6 +135,8 @@ pub fn (mut rule Rules) update_permanent() {
 // B: Spell
 
 pub interface Spell_interface {
+mut:
+	rule Rules
 }
 
 type Spell_fn = fn (mut Spell, mut Spell_interface)

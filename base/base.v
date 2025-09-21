@@ -89,12 +89,23 @@ fn target_effect(id int, mut spells_list []Spell) {
 
 // C: Spell function
 
+pub struct Turn_rules {
+pub mut:
+	rule      Rules
+	team_turn int
+	team_nb   int
+}
+
 pub fn attack(damage int, mut self Spell, mut rule Spell_interface) {
-	if mut rule is Rules {
-		target := self.marks[rule.get_mark_id('TARGET')]
-		if target >= 0 {
-			// other_team_id := (team_turn + 1) % 2
-			// inflict_damage(damage, mut rule.team_permanent_list[other_team_id][target])
+	if mut rule is Turn_rules {
+		if rule.team_nb == 2 {
+			target := self.marks[rule.get_mark_id('TARGET')]
+			if target >= 0 {
+				other_team_id := (rule.team_turn + 1) % 2
+				inflict_damage(damage, mut rule.team_permanent_list[other_team_id][target])
+			}
+		} else {
+			panic('Not implemented')
 		}
 	}
 }

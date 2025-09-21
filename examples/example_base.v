@@ -1,12 +1,10 @@
 module main
 
 import base
-import linklancien.capas { Rules }
+import linklancien.capas
 
 struct App {
-mut:
-	rule      Rules
-	team_turn int
+	base.Turn_rules
 }
 
 fn main() {

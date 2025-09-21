@@ -34,8 +34,6 @@ fn main() {
 	})
 	app.init()
 	app.game()
-
-	println(app)
 }
 
 fn (mut app App) init() {

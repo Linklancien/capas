@@ -2,9 +2,13 @@ module main
 
 import base
 import linklancien.capas {Spell, Spell_const, Spell_interface}
+import os {input}
 
 struct App {
-	base.Turn_based_rules
+mut:
+	rule      capas.Rules
+	team_turn int
+	team_nb   int
 }
 
 fn main() {
@@ -41,5 +45,27 @@ fn (mut app App) init() {
 		app.rule.draw(team, 1)
 		app.rule.play_ordered(team, 1)
 	}
+}
+
+pub fn (mut app App) game() {
+	base.turn_based_game(mut app)
+	println('TEAM ${(app.team_turn + 1) % 2} WIN')
+}
+
+fn (mut app App) turn() {
+	target_id := app.rule.get_mark_id('TARGET')
+	other_team_id := (app.team_turn + 1) % 2
+	max_target_id := app.rule.team_permanent_list[other_team_id].len - 1
+
+	for mut spell in mut app.rule.team_permanent_list[app.team_turn] {
+		promp := input('Select a target for ${spell.name} (-1 to target none, max: ${max_target_id}) : ').int()
+		spell.marks[target_id] = if promp <= max_target_id{promp} else{println('VALUE incorrect')
+		-1}
+		spell.cast_fn[0](mut spell, mut app)
+	}
+
+	app.rule.all_marks_do_effect(other_team_id)
+	app.rule.update_permanent()
+	println('END TURN')
 }
 

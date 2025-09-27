@@ -1,7 +1,6 @@
 module base
 
 import linklancien.capas { Rules, Mark_config, Rules, Spell, Spell_interface }
-import os {input}
 
 // Note: here all marks are initialised in an anticiped order so mark like regen can work
 // A: Init function
@@ -50,37 +49,23 @@ pub fn init_rule_base(nb_team int) Rules {
 }
 
 // B: Turn_base_rule
-pub struct Turn_based_rules {
-pub mut:
+pub interface Turn_based_rules {
+mut:
 	rule      Rules
 	team_turn int
 	team_nb   int
+
+	game()
+	turn()
 }
 
-pub fn (mut turn_based_rule Turn_based_rules) game() {
-	for turn_based_rule.rule.team_permanent_list[turn_based_rule.team_turn].len > 0 {
-		turn_based_rule.turn()
-		turn_based_rule.team_turn = (turn_based_rule.team_turn + 1) % 2
+pub fn turn_based_game(mut turn_based_game Turn_based_rules){
+	for turn_based_game.rule.team_permanent_list[turn_based_game.team_turn].len > 0 {
+		turn_based_game.team_turn = (turn_based_game.team_turn + 1) % turn_based_game.team_nb
+		turn_based_game.turn()
 	}
-	println('TEAM ${(turn_based_rule.team_turn + 1) % 2} WIN')
 }
 
-fn (mut turn_based_rule Turn_based_rules) turn() {
-	target_id := turn_based_rule.rule.get_mark_id('TARGET')
-	other_team_id := (turn_based_rule.team_turn + 1) % 2
-	max_target_id := turn_based_rule.rule.team_permanent_list[other_team_id].len - 1
-
-	for mut spell in mut turn_based_rule.rule.team_permanent_list[turn_based_rule.team_turn] {
-		promp := input('Select a target for ${spell.name} (-1 to target none, max: ${max_target_id}) : ').int()
-		spell.marks[target_id] = if promp <= max_target_id{promp} else{println('VALUE incorrect')
-		-1}
-		spell.cast_fn[0](mut spell, mut turn_based_rule)
-	}
-
-	turn_based_rule.rule.all_marks_do_effect(other_team_id)
-	turn_based_rule.rule.update_permanent()
-	println('END TURN')
-}
 // C: Marks effects function
 fn pv_effect(id int, mut spells_list []Spell) {
 	for mut spell in spells_list {

@@ -56,10 +56,10 @@ fn (mut app App) init() {
 
 fn (mut app App) game() {
 	for app.rule.team_permanent_list[app.team_turn].len > 0 {
+		app.team_turn = (app.team_turn + 1) % app.team_nb
 		app.turn()
-		app.team_turn = (app.team_turn + 1) % 2
 	}
-	println('TEAM ${(app.team_turn + 1) % 2} WIN')
+	println('TEAM ${app.team_turn} WIN')
 }
 
 fn (mut app App) turn() {

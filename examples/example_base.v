@@ -14,7 +14,7 @@ mut:
 fn main() {
 	mut app := App{}
 	app.team_nb = 2
-	app.rule = base.init_rule_base(app.team_nb)
+	app.rule = base.init_rule_base(app.team_nb, capas.Deck_type.classic)
 
 	// println(app)
 	basic_attack := fn (mut self Spell, mut rule Spell_interface) {
@@ -47,7 +47,7 @@ fn (mut app App) init() {
 	}
 }
 
-pub fn (mut app App) game() {
+fn (mut app App) game() {
 	base.turn_based_game(mut app)
 	println('TEAM ${(app.team_turn + 1) % 2} WIN')
 }
@@ -55,9 +55,9 @@ pub fn (mut app App) game() {
 fn (mut app App) turn() {
 	target_id := app.rule.get_mark_id('TARGET')
 	other_team_id := (app.team_turn + 1) % 2
-	max_target_id := app.rule.team_permanent_list[other_team_id].len - 1
+	max_target_id := app.rule.team.permanent[other_team_id].len - 1
 
-	for mut spell in mut app.rule.team_permanent_list[app.team_turn] {
+	for mut spell in mut app.rule.team.permanent[app.team_turn] {
 		promp := input('Select a target for ${spell.name} (-1 to target none, max: ${max_target_id}) : ').int()
 		spell.marks[target_id] = if promp <= max_target_id {
 			promp
@@ -69,6 +69,6 @@ fn (mut app App) turn() {
 	}
 
 	app.rule.all_marks_do_effect(other_team_id)
-	app.rule.update_permanent()
+	app.rule.team.update_permanent()
 	println('END TURN')
 }

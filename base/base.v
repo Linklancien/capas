@@ -14,8 +14,8 @@ const id_flat_reduce_dmg = 2
 const id_stun = 3
 
 // A: Init function
-pub fn init_rule_base(nb_team int) Rules {
-	mut rule := capas.rule_create(nb_team)
+pub fn init_rule_base(nb_team int, deck_type capas.Deck_type) Rules {
+	mut rule := capas.rule_create(nb_team, deck_type)
 
 	rule.add_mark(Mark_config{
 		name:        'PV'
@@ -60,7 +60,7 @@ mut:
 }
 
 pub fn turn_based_game(mut turn_based_game Turn_based_rules) {
-	for turn_based_game.rule.team_permanent_list[turn_based_game.team_turn].len > 0 {
+	for turn_based_game.rule.team.permanent[turn_based_game.team_turn].len > 0 {
 		turn_based_game.team_turn = (turn_based_game.team_turn + 1) % turn_based_game.team_nb
 		turn_based_game.turn()
 	}
@@ -115,7 +115,7 @@ pub fn attack(damage int, mut self Spell, mut costom_rule Spell_interface) {
 			target := self.marks[costom_rule.rule.get_mark_id('TARGET')]
 			if target >= 0 {
 				other_team_id := (costom_rule.team_turn + 1) % 2
-				inflict_damage(damage, mut costom_rule.rule.team_permanent_list[other_team_id][target])
+				inflict_damage(damage, mut costom_rule.rule.team.permanent[other_team_id][target])
 			}
 		} else {
 			panic('Not implemented')

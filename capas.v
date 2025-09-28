@@ -17,11 +17,11 @@ pub mut:
 	// 1:
 	marks_list []Mark
 	// 2:
-	team Deck_gestion
+	team Deck_gestion = Deck_classic{}
 }
 
 pub enum Deck_type {
-	classic
+	classic 
 	dead_array
 }
 
@@ -112,7 +112,7 @@ mut:
 	update_permanent()
 }
 
-struct Deck_classic implements Deck_gestion {
+struct Deck_classic {
 pub mut:
 	deck      [][]Spell
 	hand      [][]Spell

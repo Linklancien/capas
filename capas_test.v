@@ -1,7 +1,7 @@
 import capas
 
 fn test_context() {
-	mut rule := capas.rule_create(1)
+	mut rule := capas.rule_create(1, capas.Deck_type.classic)
 
 	rule.add_mark(capas.Mark_config{
 		name:        'PV'
@@ -21,11 +21,11 @@ fn test_context() {
 		}
 	})
 
-	println(rule.team_deck_list[0])
-	rule.marks_list[0].do_effect(mut rule.team_deck_list[0])
+	println(rule.team.deck[0])
+	rule.marks_list[0].do_effect(mut rule.team.deck[0])
 
-	assert rule.team_deck_list[0][0].is_ended
-	assert !rule.team_deck_list[0][1].is_ended
+	assert rule.team.deck[0][0].is_ended
+	assert !rule.team.deck[0][1].is_ended
 }
 
 fn pv_effect(id int, mut spells_list []capas.Spell) {
@@ -37,7 +37,7 @@ fn pv_effect(id int, mut spells_list []capas.Spell) {
 }
 
 fn test_update_permanent() {
-	mut rule := capas.rule_create(1)
+	mut rule := capas.rule_create(1, capas.Deck_type.classic)
 
 	rule.add_spell(0, capas.Spell_const{
 		name: 'Test spell'
@@ -45,20 +45,20 @@ fn test_update_permanent() {
 		name: 'Test spell'
 	})
 
-	rule.team_permanent_list = rule.team_deck_list.clone()
-	rule.team_deck_list.clear()
+	rule.team.permanent = rule.team.deck.clone()
+	rule.team.deck.clear()
 
-	assert rule.team_deck_list.len == 0, ".clear didn't work? ${rule.team_deck_list}"
+	assert rule.team.deck.len == 0, ".clear didn't work? ${rule.team.deck}"
 
-	rule.team_permanent_list[0][0].is_ended = true
-	rule.update_permanent()
+	rule.team.permanent[0][0].is_ended = true
+	rule.team.update_permanent()
 
-	assert rule.team_permanent_list.len == 1, 'update_permanent issue, ${rule.team_permanent_list}'
-	assert rule.team_graveyard_list.len == 1, 'update_permanent issue, ${rule.team_graveyard_list}'
+	assert rule.team.permanent.len == 1, 'update_permanent issue, ${rule.team.permanent}'
+	assert rule.team.permanent.len == 1, 'update_permanent issue, ${rule.team.permanent}'
 }
 
 fn test_draw() {
-	mut rule := capas.rule_create(1)
+	mut rule := capas.rule_create(1, capas.Deck_type.classic)
 
 	rule.add_spell(0, capas.Spell_const{
 		name: 'Test spell 1'
@@ -66,24 +66,24 @@ fn test_draw() {
 		name: 'Test spell 2'
 	})
 
-	assert rule.team_deck_list[0].len == 2, 'len != 2, ${rule}'
-	assert rule.team_hand_list[0].len == 0, 'len != 0, ${rule}'
+	assert rule.team.deck[0].len == 2, 'len != 2, ${rule}'
+	assert rule.team.hand[0].len == 0, 'len != 0, ${rule}'
 
 	rule.draw(0, 1)
 
-	assert rule.team_deck_list[0].len == 1, 'len != 1, ${rule}'
-	assert rule.team_hand_list[0].len == 1, 'len != 1, ${rule}'
+	assert rule.team.deck[0].len == 1, 'len != 1, ${rule}'
+	assert rule.team.hand[0].len == 1, 'len != 1, ${rule}'
 
 	rule.draw(0, 1)
 
-	assert rule.team_deck_list[0].len == 0, 'len != 1, ${rule}'
-	assert rule.team_hand_list[0].len == 2, 'len != 1, ${rule}'
+	assert rule.team.deck[0].len == 0, 'len != 1, ${rule}'
+	assert rule.team.hand[0].len == 2, 'len != 1, ${rule}'
 }
 
 fn test_draw_rand() {
 	names := [['Test spell 1', 'Test spell 2'], ['Test spell 1', 'Test spell 1']]
 	for name in names {
-		mut rule := capas.rule_create(1)
+		mut rule := capas.rule_create(1, capas.Deck_type.classic)
 
 		rule.add_spell(0, capas.Spell_const{
 			name: name[0]
@@ -91,17 +91,17 @@ fn test_draw_rand() {
 			name: name[1]
 		})
 
-		assert rule.team_deck_list[0].len == 2, 'len != 2, ${name}'
-		assert rule.team_hand_list[0].len == 0, 'len != 0, ${name}'
+		assert rule.team.deck[0].len == 2, 'len != 2, ${name}'
+		assert rule.team.hand[0].len == 0, 'len != 0, ${name}'
 
 		rule.draw_rand(0, 1)
 
-		assert rule.team_deck_list[0].len == 1, 'len != 1, ${name}'
-		assert rule.team_hand_list[0].len == 1, 'len != 1, ${name}'
+		assert rule.team.deck[0].len == 1, 'len != 1, ${name}'
+		assert rule.team.hand[0].len == 1, 'len != 1, ${name}'
 
 		rule.draw_rand(0, 1)
 
-		assert rule.team_deck_list[0].len == 0, 'len != 0, ${name}'
-		assert rule.team_hand_list[0].len == 2, 'len != 2, ${name}'
+		assert rule.team.deck[0].len == 0, 'len != 0, ${name}'
+		assert rule.team.hand[0].len == 2, 'len != 2, ${name}'
 	}
 }

@@ -8,7 +8,7 @@ import rand
 // A: Rules struct
 // a: Rules fn concerning Mark
 // b: Rules fn concernunf Spell
-// c: Rules fn for team gestion
+// c: Deck gestion
 
 // 1: each mark id is their index in this string
 // 2: all lists stocking spell
@@ -17,18 +17,36 @@ pub mut:
 	// 1:
 	marks_list []Mark
 	// 2:
-	team_deck_list      [][]Spell
-	team_hand_list      [][]Spell
-	team_permanent_list [][]Spell
-	team_graveyard_list [][]Spell
+	team Deck_gestion
 }
 
-pub fn rule_create(nb_team int) Rules {
-	return Rules{
-		team_deck_list:      [][]Spell{len: nb_team}
-		team_hand_list:      [][]Spell{len: nb_team}
-		team_permanent_list: [][]Spell{len: nb_team}
-		team_graveyard_list: [][]Spell{len: nb_team}
+pub enum Deck_type {
+	classic
+	dead_array
+}
+
+pub fn rule_create(nb_team int, deck_type Deck_type) Rules {
+	match deck_type{
+		.classic{
+			return Rules{
+				team: Deck_classic{
+					deck:      [][]Spell{len: nb_team}
+					hand:      [][]Spell{len: nb_team}
+					permanent: [][]Spell{len: nb_team}
+					graveyard: [][]Spell{len: nb_team}
+				}
+			}
+		}
+		.dead_array{
+			return Rules{
+				team: Deck_dead_array{
+					deck:      [][]Spell{len: nb_team}
+					hand:      [][]Spell{len: nb_team}
+					permanent: [][]Spell{len: nb_team}
+					graveyard: [][]Spell{len: nb_team}
+				}
+			}
+		}
 	}
 }
 
@@ -52,9 +70,9 @@ pub fn (rule Rules) get_mark_id(name string) int {
 	panic('Name: ${name} is not a mark name ${rule.marks_list}')
 }
 
-pub fn (mut rule Rules) all_marks_do_effect(team_nb int) {
+pub fn (mut rule Rules) all_marks_do_effect(nb int) {
 	for index, mark in rule.marks_list {
-		mark.effect(index, mut rule.team_permanent_list[team_nb])
+		mark.effect(index, mut rule.team.permanent[nb])
 	}
 }
 
@@ -68,7 +86,7 @@ pub fn (mut rule Rules) add_spell(team int, cfg_list ...Spell_const) {
 			marks[id] = cfg.initiliazed_mark[name]
 		}
 
-		rule.team_deck_list[team] << Spell{
+		rule.team.deck[team] << Spell{
 			Spell_const: cfg
 
 			marks: marks
@@ -79,23 +97,85 @@ pub fn (mut rule Rules) add_spell(team int, cfg_list ...Spell_const) {
 pub fn (mut rule Rules) add_marks_to_spell(team int, id int, add_marks map[string]int) {
 	for name in add_marks.keys() {
 		mark_id := rule.get_mark_id(name)
-		rule.team_permanent_list[team][id].marks[mark_id] += add_marks[name]
+		rule.team.permanent[team][id].marks[mark_id] += add_marks[name]
 	}
 }
 
-// c: Rules fn for team gestion
+// c: Deck gestion
+pub interface Deck_gestion{
+mut :
+	deck      [][]Spell
+	hand      [][]Spell
+	permanent [][]Spell
+	graveyard [][]Spell
+
+	update_permanent()
+}
+
+struct Deck_classic implements Deck_gestion {
+pub mut :
+	deck      [][]Spell
+	hand      [][]Spell
+	permanent [][]Spell
+	graveyard [][]Spell
+}
+
+pub fn (mut deck Deck_classic) update_permanent() {
+	for id_player in 0 .. deck.permanent.len {
+		total_len := deck.permanent[id_player].len
+		mut new_permanent := []Spell{cap: total_len}
+		mut new_graveyard := []Spell{}
+		for _ in 0 .. total_len {
+			spell := deck.permanent[id_player].pop()
+			if spell.is_ended {
+				new_graveyard << spell
+			} else {
+				new_permanent << spell
+			}
+		}
+		deck.permanent[id_player] << new_permanent
+		deck.graveyard[id_player] << new_graveyard
+	}
+}
+
+struct Deck_dead_array{
+	Deck_classic
+mut: 
+	dead_ids []int
+}
+
+const dead_spell = Spell{
+	name: 'dead spell'
+	description: 'a spell used with the dead array methode'
+	
+	is_ended: true
+}
+
+pub fn (mut deck Deck_dead_array) update_permanent() {
+	for id_player in 0 .. deck.permanent.len {
+		total_len := deck.permanent[id_player].len
+		for id in 0 .. total_len {
+			if deck.permanent[id_player][id].is_ended && deck.permanent[id_player][id].name != 'dead spell'{
+				deck.graveyard[id_player] << deck.permanent[id_player][id]
+				deck.permanent[id_player][id] = dead_spell
+				deck.dead_ids << id
+			}
+		}
+	}
+}
+
 pub fn (mut rule Rules) draw(team int, number int) {
-	rule.team_hand_list[team] << rule.team_deck_list[team]#[-number..]
-	rule.team_deck_list[team] = rule.team_deck_list[team]#[..-number]
+	rule.team.hand[team] << rule.team.deck[team]#[-number..]
+	rule.team.deck[team] = rule.team.deck[team]#[..-number]
 }
 
 pub fn (mut rule Rules) draw_rand(team int, number int) {
 	// Not perfect but a least working
-	elems := rand.choose(rule.team_deck_list[team], number) or { panic('RAND FAILED') }
+	elems := rand.choose(rule.team.deck[team], number) or { panic('RAND FAILED') }
 
 	mut new_deck := []Spell{}
 	mut total := 0
-	outer: for deck_spell in rule.team_deck_list[team] {
+	outer: for deck_spell in rule.team.deck[team] {
 		for elem in elems {
 			if deck_spell.name == elem.name && total != elems.len {
 				total += 1
@@ -105,32 +185,30 @@ pub fn (mut rule Rules) draw_rand(team int, number int) {
 		}
 	}
 
-	rule.team_hand_list[team] << elems
-	rule.team_deck_list[team] = new_deck
+	rule.team.hand[team] << elems
+	rule.team.deck[team] = new_deck
 }
 
 pub fn (mut rule Rules) play_ordered(team int, number int) {
-	rule.team_permanent_list[team] << rule.team_hand_list[team]#[-number..]
-	rule.team_hand_list[team] = rule.team_hand_list[team]#[..-number]
-}
-
-pub fn (mut rule Rules) update_permanent() {
-	for id_player in 0 .. rule.team_permanent_list.len {
-		total_len := rule.team_permanent_list[id_player].len
-		mut new_permanent := []Spell{cap: total_len}
-		mut new_graveyard := []Spell{}
-		for _ in 0 .. total_len {
-			spell := rule.team_permanent_list[id_player].pop()
-			if spell.is_ended {
-				new_graveyard << spell
-			} else {
-				new_permanent << spell
+	match mut rule.team{
+		Deck_classic{
+			rule.team.permanent[team] << rule.team.hand[team]#[-number..]
+			rule.team.hand[team] = rule.team.hand[team]#[..-number]
+		}
+		Deck_dead_array{
+			mut to_add := rule.team.hand[team]#[-number..]
+			rule.team.hand[team] = rule.team.hand[team]#[..-number]
+			for id in rule.team.dead_ids{
+				rule.team.permanent[team][id] = to_add.pop()
+			}
+			for id in 0..to_add.len{
+				rule.team.permanent[team] << to_add[id]
 			}
 		}
-		rule.team_permanent_list[id_player] << new_permanent
-		rule.team_graveyard_list[id_player] << new_graveyard
+		else{}
 	}
 }
+
 
 // B: Spell
 

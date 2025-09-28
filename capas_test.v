@@ -21,7 +21,7 @@ fn test_context() {
 		}
 	})
 
-	println(rule.team.deck[0])
+	// println(rule.team.deck[0])
 	rule.marks_list[0].do_effect(mut rule.team.deck[0])
 
 	assert rule.team.deck[0][0].is_ended
@@ -36,7 +36,7 @@ fn pv_effect(id int, mut spells_list []capas.Spell) {
 	}
 }
 
-fn test_update_permanent() {
+fn test_classic_update_permanent() {
 	mut rule := capas.rule_create(1, capas.Deck_type.classic)
 
 	rule.add_spell(0, capas.Spell_const{
@@ -45,16 +45,65 @@ fn test_update_permanent() {
 		name: 'Test spell'
 	})
 
-	rule.team.permanent = rule.team.deck.clone()
-	rule.team.deck.clear()
+	rule.team.permanent[0] = rule.team.deck[0].clone()
+	rule.team.deck[0].clear()
 
-	assert rule.team.deck.len == 0, ".clear didn't work? ${rule.team.deck}"
+	assert rule.team.deck[0].len == 0, ".clear didn't work? ${rule.team.deck}"
 
 	rule.team.permanent[0][0].is_ended = true
 	rule.team.update_permanent()
 
-	assert rule.team.permanent.len == 1, 'update_permanent issue, ${rule.team.permanent}'
-	assert rule.team.permanent.len == 1, 'update_permanent issue, ${rule.team.permanent}'
+	assert rule.team.permanent[0].len == 1, 'update_permanent issue, ${name_array(rule)}'
+
+	rule.add_spell(0, capas.Spell_const{
+		name: 'Test spell'
+	})
+
+	rule.team.permanent[0] << rule.team.deck[0].clone()
+	rule.team.deck[0].clear()
+	rule.team.permanent[0][1].is_ended = true
+	rule.team.update_permanent()
+	assert rule.team.permanent[0].len == 1, 'update_permanent issue, ${name_array(rule)}'
+}
+
+fn test_dead_array_update_permanent() {
+	mut rule := capas.rule_create(1, capas.Deck_type.dead_array)
+
+	rule.add_spell(0, capas.Spell_const{
+		name: 'Test spell'
+	}, capas.Spell_const{
+		name: 'Test spell'
+	})
+
+	rule.team.permanent[0] = rule.team.deck[0].clone()
+	rule.team.deck[0].clear()
+
+	assert rule.team.deck[0].len == 0, ".clear didn't work? ${rule.team.deck}"
+
+	rule.team.permanent[0][0].is_ended = true
+	rule.team.update_permanent()
+
+	assert rule.team.permanent[0].len == 2, 'update_permanent issue, ${name_array(rule)}'
+
+	rule.add_spell(0, capas.Spell_const{
+		name: 'Test spell'
+	})
+
+	rule.team.permanent[0] << rule.team.deck[0].clone()
+	rule.team.deck[0].clear()
+	rule.team.permanent[0][2].is_ended = true
+	rule.team.update_permanent()
+	assert rule.team.permanent[0].len == 3, 'update_permanent issue, ${name_array(rule)}'
+}
+
+fn name_array(rule capas.Rules) []string {
+	mut names := []string{}
+	for id in 0 .. rule.team.permanent.len {
+		for spell in rule.team.permanent[id] {
+			names << spell.name
+		}
+	}
+	return names
 }
 
 fn test_draw() {

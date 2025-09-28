@@ -26,8 +26,8 @@ pub enum Deck_type {
 }
 
 pub fn rule_create(nb_team int, deck_type Deck_type) Rules {
-	match deck_type{
-		.classic{
+	match deck_type {
+		.classic {
 			return Rules{
 				team: Deck_classic{
 					deck:      [][]Spell{len: nb_team}
@@ -37,7 +37,7 @@ pub fn rule_create(nb_team int, deck_type Deck_type) Rules {
 				}
 			}
 		}
-		.dead_array{
+		.dead_array {
 			return Rules{
 				team: Deck_dead_array{
 					deck:      [][]Spell{len: nb_team}
@@ -102,8 +102,8 @@ pub fn (mut rule Rules) add_marks_to_spell(team int, id int, add_marks map[strin
 }
 
 // c: Deck gestion
-pub interface Deck_gestion{
-mut :
+pub interface Deck_gestion {
+mut:
 	deck      [][]Spell
 	hand      [][]Spell
 	permanent [][]Spell
@@ -113,7 +113,7 @@ mut :
 }
 
 struct Deck_classic implements Deck_gestion {
-pub mut :
+pub mut:
 	deck      [][]Spell
 	hand      [][]Spell
 	permanent [][]Spell
@@ -138,16 +138,16 @@ pub fn (mut deck Deck_classic) update_permanent() {
 	}
 }
 
-struct Deck_dead_array{
+struct Deck_dead_array {
 	Deck_classic
-mut: 
+mut:
 	dead_ids []int
 }
 
 const dead_spell = Spell{
-	name: 'dead spell'
+	name:        'dead spell'
 	description: 'a spell used with the dead array methode'
-	
+
 	is_ended: true
 }
 
@@ -155,7 +155,8 @@ pub fn (mut deck Deck_dead_array) update_permanent() {
 	for id_player in 0 .. deck.permanent.len {
 		total_len := deck.permanent[id_player].len
 		for id in 0 .. total_len {
-			if deck.permanent[id_player][id].is_ended && deck.permanent[id_player][id].name != 'dead spell'{
+			if deck.permanent[id_player][id].is_ended
+				&& deck.permanent[id_player][id].name != 'dead spell' {
 				deck.graveyard[id_player] << deck.permanent[id_player][id]
 				deck.permanent[id_player][id] = dead_spell
 				deck.dead_ids << id
@@ -190,25 +191,24 @@ pub fn (mut rule Rules) draw_rand(team int, number int) {
 }
 
 pub fn (mut rule Rules) play_ordered(team int, number int) {
-	match mut rule.team{
-		Deck_classic{
+	match mut rule.team {
+		Deck_classic {
 			rule.team.permanent[team] << rule.team.hand[team]#[-number..]
 			rule.team.hand[team] = rule.team.hand[team]#[..-number]
 		}
-		Deck_dead_array{
+		Deck_dead_array {
 			mut to_add := rule.team.hand[team]#[-number..]
 			rule.team.hand[team] = rule.team.hand[team]#[..-number]
-			for id in rule.team.dead_ids{
+			for id in rule.team.dead_ids {
 				rule.team.permanent[team][id] = to_add.pop()
 			}
-			for id in 0..to_add.len{
+			for id in 0 .. to_add.len {
 				rule.team.permanent[team] << to_add[id]
 			}
 		}
-		else{}
+		else {}
 	}
 }
-
 
 // B: Spell
 

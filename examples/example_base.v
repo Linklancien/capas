@@ -1,8 +1,8 @@
 module main
 
 import base
-import linklancien.capas {Spell, Spell_const, Spell_interface}
-import os {input}
+import linklancien.capas { Spell, Spell_const, Spell_interface }
+import os { input }
 
 struct App {
 mut:
@@ -17,7 +17,7 @@ fn main() {
 	app.rule = base.init_rule_base(app.team_nb)
 
 	// println(app)
-	basic_attack := fn (mut self Spell, mut rule Spell_interface){
+	basic_attack := fn (mut self Spell, mut rule Spell_interface) {
 		base.attack(1, mut self, mut rule)
 	}
 	app.rule.add_spell(0, Spell_const{
@@ -59,8 +59,12 @@ fn (mut app App) turn() {
 
 	for mut spell in mut app.rule.team_permanent_list[app.team_turn] {
 		promp := input('Select a target for ${spell.name} (-1 to target none, max: ${max_target_id}) : ').int()
-		spell.marks[target_id] = if promp <= max_target_id{promp} else{println('VALUE incorrect')
-		-1}
+		spell.marks[target_id] = if promp <= max_target_id {
+			promp
+		} else {
+			println('VALUE incorrect')
+			-1
+		}
 		spell.cast_fn[0](mut spell, mut app)
 	}
 
@@ -68,4 +72,3 @@ fn (mut app App) turn() {
 	app.rule.update_permanent()
 	println('END TURN')
 }
-

@@ -1,6 +1,6 @@
 module base
 
-import linklancien.capas { Rules, Mark_config, Rules, Spell, Spell_interface }
+import linklancien.capas { Mark_config, Rules, Rules, Spell, Spell_interface }
 
 // Note: here all marks are initialised in an anticiped order so mark like regen can work
 // A: Init function
@@ -59,7 +59,7 @@ mut:
 	turn()
 }
 
-pub fn turn_based_game(mut turn_based_game Turn_based_rules){
+pub fn turn_based_game(mut turn_based_game Turn_based_rules) {
 	for turn_based_game.rule.team_permanent_list[turn_based_game.team_turn].len > 0 {
 		turn_based_game.team_turn = (turn_based_game.team_turn + 1) % turn_based_game.team_nb
 		turn_based_game.turn()
@@ -71,7 +71,7 @@ fn pv_effect(id int, mut spells_list []Spell) {
 	for mut spell in spells_list {
 		if spell.marks[id] == 0 {
 			spell.is_ended = true
-			println('ER $id')
+			println('ER ${id}')
 		}
 	}
 }
@@ -108,7 +108,6 @@ fn target_effect(id int, mut spells_list []Spell) {
 }
 
 // D: Spell function
-
 
 pub fn attack(damage int, mut self Spell, mut costom_rule Spell_interface) {
 	if mut costom_rule is Turn_based_rules {

@@ -22,7 +22,12 @@ fn main() {
 	}
 	app.rule.add_spell(0, Spell_const{
 		name:             'Test spell team 0'
-		cast_fn:          [basic_attack]
+		cast_fn:          [
+			capas.Spell_fn{
+				name:     'basic attack'
+				function: basic_attack
+			},
+		]
 		initiliazed_mark: {
 			'PV':     1
 			'TARGET': -1
@@ -30,7 +35,12 @@ fn main() {
 	})
 	app.rule.add_spell(1, Spell_const{
 		name:             'Test spell team 1'
-		cast_fn:          [basic_attack]
+		cast_fn:          [
+			capas.Spell_fn{
+				name:     'basic attack'
+				function: basic_attack
+			},
+		]
 		initiliazed_mark: {
 			'PV':     1
 			'TARGET': -1
@@ -65,7 +75,7 @@ fn (mut app App) turn() {
 			println('VALUE incorrect')
 			-1
 		}
-		spell.cast_fn[0](mut spell, mut app)
+		spell.cast_fn[0].function(mut spell, mut app)
 	}
 
 	app.rule.all_marks_do_effect(other_team_id)

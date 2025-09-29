@@ -183,12 +183,12 @@ fn test_play_ordered() {
 
 		rule.team.permanent[0][0].is_ended = true
 		rule.team.update_permanent()
-		
-		match deck_type{
-			.classic{
+
+		match deck_type {
+			.classic {
 				assert rule.team.permanent[0].len == 1, 'len != 1, ${deck_type}'
 			}
-			.dead_array{
+			.dead_array {
 				assert rule.team.permanent[0].len == 2, 'len != 1, ${deck_type}'
 			}
 		}

@@ -21,7 +21,7 @@ pub mut:
 }
 
 pub enum Deck_type {
-	classic 
+	classic
 	dead_array
 }
 
@@ -217,7 +217,12 @@ mut:
 	rule Rules
 }
 
-type Spell_fn = fn (mut Spell, mut Spell_interface)
+pub struct Spell_fn {
+pub:
+	name        string
+	description string
+	function    fn (mut Spell, mut Spell_interface) = fn (mut spell Spell, mut changed Spell_interface) {}
+}
 
 // 1: the string is the name of the mark
 pub struct Spell_const {
@@ -243,7 +248,11 @@ pub mut:
 	is_ended bool
 }
 
-pub fn null_spell_fn(mut spell Spell, mut changed Spell_interface) {}
+pub const null_spell_fn = Spell_fn{
+	name:        'null_spell_fn'
+	description: 'a function to initialise the Spell_const struct'
+	function:    fn (mut spell Spell, mut changed Spell_interface) {}
+}
 
 pub fn (spell Spell) clone() Spell {
 	return Spell{

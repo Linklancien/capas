@@ -8,10 +8,10 @@ import linklancien.capas { Mark_config, Rules, Rules, Spell, Spell_interface }
 // C: Marks effects function
 // D: Spell function
 
-const id_pv = 0
-const id_shield = 1
-const id_flat_reduce_dmg = 2
-const id_stun = 3
+pub const id_pv = 0
+pub const id_shield = 1
+pub const id_flat_reduce_dmg = 2
+pub const id_stun = 3
 
 // A: Init function
 pub fn init_rule_base(nb_team int, deck_type capas.Deck_type) Rules {

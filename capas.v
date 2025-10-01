@@ -199,9 +199,12 @@ pub fn (mut rule Rules) play_ordered(team int, number int) {
 		Deck_dead_array {
 			mut to_add := rule.team.hand[team]#[-number..]
 			rule.team.hand[team] = rule.team.hand[team]#[..-number]
+			mut added_dead := 0
 			for id in rule.team.dead_ids {
 				rule.team.permanent[team][id] = to_add.pop()
+				added_dead += 1
 			}
+			rule.team.dead_ids = rule.team.dead_ids[added_dead..]
 			for id in 0 .. to_add.len {
 				rule.team.permanent[team] << to_add[id]
 			}

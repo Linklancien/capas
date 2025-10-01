@@ -110,9 +110,10 @@ mut:
 	graveyard [][]Spell
 
 	update_permanent()
+	next_id(int) int
 }
 
-struct Deck_classic {
+pub struct Deck_classic {
 pub mut:
 	deck      [][]Spell
 	hand      [][]Spell
@@ -138,7 +139,12 @@ pub fn (mut deck Deck_classic) update_permanent() {
 	}
 }
 
-struct Deck_dead_array {
+pub fn (deck Deck_classic) next_id(team_turn int) int {
+	return deck.permanent[team_turn].len 
+}
+
+
+pub struct Deck_dead_array {
 	Deck_classic
 mut:
 	dead_ids []int
@@ -163,6 +169,13 @@ pub fn (mut deck Deck_dead_array) update_permanent() {
 			}
 		}
 	}
+}
+
+pub fn (deck Deck_dead_array) next_id(team_turn int) int {
+	if deck.dead_ids.len > 0{
+		return deck.dead_ids[0]
+	}
+	return deck.permanent[team_turn].len 
 }
 
 pub fn (mut rule Rules) draw(team int, number int) {

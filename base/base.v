@@ -1,6 +1,6 @@
 module base
 
-import linklancien.capas { Mark_config, Rules, Rules, Spell, Spell_interface }
+import linklancien.capas { Mark_config, Rules, Spell, Spell_interface }
 
 // Note: here all marks are initialised in an anticiped order so mark like regen can work
 // A: Init function

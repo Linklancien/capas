@@ -38,11 +38,6 @@ pub fn init_rule_base(nb_team int, deck_type capas.Deck_type) Rules {
 		name:        'POISON'
 		description: 'Reduce the pv mark as much as the poison mark quantity'
 		effect:      poison_effect
-	}, Mark_config{
-		name:        'TARGET'
-		description: 'Used to store a spell target'
-
-		effect: target_effect
 	})
 
 	return rule
@@ -98,12 +93,6 @@ fn poison_effect(id int, mut spells_list []Spell) {
 				spell.marks[id] -= 1
 			}
 		}
-	}
-}
-
-fn target_effect(id int, mut spells_list []Spell) {
-	for mut spell in spells_list {
-		spell.marks[id] == -1
 	}
 }
 

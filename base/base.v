@@ -109,24 +109,10 @@ fn target_effect(id int, mut spells_list []Spell) {
 
 // D: Spell function
 
-pub fn attack(damage int, mut self Spell, mut costom_rule Spell_interface) {
-	if mut costom_rule is Turn_based_rules {
-		if costom_rule.team_nb == 2 {
-			target := self.marks[costom_rule.rule.get_mark_id('TARGET')]
-			if target >= 0 {
-				other_team_id := (costom_rule.team_turn + 1) % 2
-				inflict_damage(damage, mut costom_rule.rule.team.permanent[other_team_id][target])
-			}
-		} else {
-			panic('Not implemented')
-		}
-	}
-}
-
 // 1: handle flat reduction
 // 2: handle shield
 // 3: handle pv
-fn inflict_damage(damage int, mut spell Spell) {
+fn inflict_damage(mut spell Spell, damage int) {
 	// 1:
 	mut dmg := damage - spell.marks[id_flat_reduce_dmg]
 	// 2:
@@ -144,6 +130,13 @@ fn inflict_damage(damage int, mut spell Spell) {
 	} else if spell.marks[id_pv] > 0 {
 		spell.marks[id_shield] -= dmg
 		dmg = 0
+	}
+}
+
+fn inflict_effects(mut spell Spell, rule Rules, effects_mark map[string]int){
+	for name in effects_mark.keys() {
+		id := rule.get_mark_id(name)
+		spell.marks[id] += effects_mark[name]
 	}
 }
 

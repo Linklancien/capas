@@ -139,7 +139,3 @@ fn inflict_effects(mut spell Spell, rule Rules, effects_mark map[string]int){
 		spell.marks[id] += effects_mark[name]
 	}
 }
-
-pub fn test_import() {
-	println('IMPORTED')
-}

@@ -101,7 +101,7 @@ fn poison_effect(id int, mut spells_list []Spell) {
 // 1: handle flat reduction
 // 2: handle shield
 // 3: handle pv
-fn inflict_damage(mut spell Spell, damage int) {
+pub fn inflict_damage(mut spell Spell, damage int) {
 	// 1:
 	mut dmg := damage - spell.marks[id_flat_reduce_dmg]
 	// 2:
@@ -122,7 +122,7 @@ fn inflict_damage(mut spell Spell, damage int) {
 	}
 }
 
-fn inflict_effects(mut spell Spell, rule Rules, effects_mark map[string]int){
+pub fn inflict_effect(mut spell Spell, rule Rules, effects_mark map[string]int){
 	for name in effects_mark.keys() {
 		id := rule.get_mark_id(name)
 		spell.marks[id] += effects_mark[name]

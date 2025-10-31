@@ -68,7 +68,6 @@ fn pv_effect(id int, mut spells_list []Spell) {
 	for mut spell in spells_list {
 		if spell.marks[id] == 0 {
 			spell.is_ended = true
-			println('ER ${id}')
 		}
 	}
 }
@@ -119,7 +118,7 @@ pub fn inflict_damage(mut spell Spell, damage int) {
 		dmg -= spell.marks[id_pv]
 		spell.marks[id_pv] = 0
 	} else if spell.marks[id_pv] > 0 {
-		spell.marks[id_shield] -= dmg
+		spell.marks[id_pv] -= dmg
 		dmg = 0
 	}
 }

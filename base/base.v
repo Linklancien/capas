@@ -12,6 +12,8 @@ pub const id_pv = 0
 pub const id_shield = 1
 pub const id_flat_reduce_dmg = 2
 pub const id_stun = 3
+pub const id_regen = 4
+pub const id_poison = 5
 
 // A: Init function
 pub fn init_rule_base(nb_team int, deck_type capas.Deck_type) Rules {

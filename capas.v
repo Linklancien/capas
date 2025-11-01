@@ -204,6 +204,7 @@ pub fn (mut rule Rules) draw_rand(team int, number int) {
 }
 
 pub fn (mut rule Rules) play_ordered(team int, number int) {
+	// last put last play / pile
 	match mut rule.team {
 		Deck_classic {
 			rule.team.permanent[team] << rule.team.hand[team]#[-number..]

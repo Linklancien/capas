@@ -20,21 +20,12 @@ fn main() {
 	basic_attack := fn (mut self Spell, mut rule Spell_interface) {
 		base.attack(1, mut self, mut rule)
 	}
-	app.rule.add_spell(0, Spell_const{
-		name:             'Test spell team 0'
-		cast_fn:          [
-			capas.Spell_fn{
-				name:     'basic attack'
-				function: basic_attack
-			},
-		]
-		initiliazed_mark: {
-			'PV':     1
-			'TARGET': -1
-		}
-	})
-	app.rule.add_spell(1, Spell_const{
+	spell_example := Spell_const{
 		name:             'Test spell team 1'
+		on_cast_fn:       capas.Spell_fn{
+			name:     'Hello'
+			function: hello
+		}
 		cast_fn:          [
 			capas.Spell_fn{
 				name:     'basic attack'
@@ -45,7 +36,10 @@ fn main() {
 			'PV':     1
 			'TARGET': -1
 		}
-	})
+	}
+	app.rule.add_spell(0, spell_example)
+	app.rule.add_spell(1, spell_example)
+
 	app.init()
 	app.game()
 }
@@ -53,7 +47,7 @@ fn main() {
 fn (mut app App) init() {
 	for team in 0 .. 2 {
 		app.rule.draw(team, 1)
-		app.rule.play_ordered(team, 1)
+		app.rule.play_ordered(team, 1, mut app)
 	}
 }
 
@@ -81,4 +75,8 @@ fn (mut app App) turn() {
 	app.rule.all_marks_do_effect(other_team_id)
 	app.rule.team.update_permanent()
 	println('END TURN')
+}
+
+fn hello(mut self Spell, mut app Spell_interface) {
+	println('Hello')
 }

@@ -1,6 +1,6 @@
 module base
 
-import linklancien.capas { Mark_config, Rules, Spell, Spell_interface }
+import linklancien.capas { Mark_config, Rules, Spell }
 
 // Note: here all marks are initialised in an anticiped order so mark like regen can work
 // A: Init function
@@ -66,18 +66,22 @@ pub fn turn_based_game(mut turn_based_game Turn_based_rules) {
 // C: Marks effects function
 fn pv_effect(id int, mut spells_list []Spell) {
 	for mut spell in spells_list {
-		if spell.marks[id] == 0 {
-			spell.is_ended = true
+		if !spell.is_ended {
+			if spell.marks[id] == 0 {
+				spell.is_ended = true
+			}
 		}
 	}
 }
 
 fn regen_effect(id int, mut spells_list []Spell) {
 	for mut spell in spells_list {
-		if spell.marks[id] < 0 {
-			if spell.marks[id_pv] > 0 {
-				spell.marks[id_pv] += spell.marks[id]
-				spell.marks[id] -= 1
+		if !spell.is_ended {
+			if spell.marks[id] < 0 {
+				if spell.marks[id_pv] > 0 {
+					spell.marks[id_pv] += spell.marks[id]
+					spell.marks[id] -= 1
+				}
 			}
 		}
 	}
@@ -85,13 +89,15 @@ fn regen_effect(id int, mut spells_list []Spell) {
 
 fn poison_effect(id int, mut spells_list []Spell) {
 	for mut spell in spells_list {
-		if spell.marks[id] < 0 {
-			if spell.marks[id_pv] > spell.marks[id] {
-				spell.marks[id_pv] -= spell.marks[id]
-				spell.marks[id] -= 1
-			} else if spell.marks[id_pv] > 0 {
-				spell.marks[id_pv] = 0
-				spell.marks[id] -= 1
+		if !spell.is_ended {
+			if spell.marks[id] < 0 {
+				if spell.marks[id_pv] > spell.marks[id] {
+					spell.marks[id_pv] -= spell.marks[id]
+					spell.marks[id] -= 1
+				} else if spell.marks[id_pv] > 0 {
+					spell.marks[id_pv] = 0
+					spell.marks[id] -= 1
+				}
 			}
 		}
 	}
@@ -123,7 +129,7 @@ pub fn inflict_damage(mut spell Spell, damage int) {
 	}
 }
 
-pub fn inflict_effect(mut spell Spell, rule Rules, effects_mark map[string]int){
+pub fn inflict_effect(mut spell Spell, rule Rules, effects_mark map[string]int) {
 	for name in effects_mark.keys() {
 		id := rule.get_mark_id(name)
 		spell.marks[id] += effects_mark[name]

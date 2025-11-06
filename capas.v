@@ -71,8 +71,8 @@ pub fn (rule Rules) get_mark_id(name string) int {
 }
 
 pub fn (mut rule Rules) all_marks_do_effect(nb int) {
-	for index, mark in rule.marks_list {
-		mark.effect(index, mut rule.team.permanent[nb])
+	for mark in rule.marks_list {
+		mark.do_effect(mut rule.team.permanent[nb])
 	}
 }
 
@@ -103,6 +103,7 @@ pub fn (mut rule Rules) add_marks_to_spell(team int, id int, add_marks map[strin
 
 // c: Deck gestion
 pub interface Deck_gestion {
+	next_id(int) int
 mut:
 	deck      [][]Spell
 	hand      [][]Spell
@@ -110,7 +111,6 @@ mut:
 	graveyard [][]Spell
 
 	update_permanent()
-	next_id(int) int
 }
 
 pub struct Deck_classic {
@@ -140,9 +140,8 @@ pub fn (mut deck Deck_classic) update_permanent() {
 }
 
 pub fn (deck Deck_classic) next_id(team_turn int) int {
-	return deck.permanent[team_turn].len 
+	return deck.permanent[team_turn].len
 }
-
 
 pub struct Deck_dead_array {
 	Deck_classic
@@ -172,10 +171,10 @@ pub fn (mut deck Deck_dead_array) update_permanent() {
 }
 
 pub fn (deck Deck_dead_array) next_id(team_turn int) int {
-	if deck.dead_ids.len > 0{
+	if deck.dead_ids.len > 0 {
 		return deck.dead_ids[0]
 	}
-	return deck.permanent[team_turn].len 
+	return deck.permanent[team_turn].len
 }
 
 pub fn (mut rule Rules) draw(team int, number int) {
@@ -203,12 +202,15 @@ pub fn (mut rule Rules) draw_rand(team int, number int) {
 	rule.team.deck[team] = new_deck
 }
 
-pub fn (mut rule Rules) play_ordered(team int, number int) {
+pub fn (mut rule Rules) play_ordered(team int, number int, mut spell_interface Spell_interface) {
 	// last put last play / pile
 	match mut rule.team {
 		Deck_classic {
 			rule.team.permanent[team] << rule.team.hand[team]#[-number..]
 			rule.team.hand[team] = rule.team.hand[team]#[..-number]
+			for mut spell in mut rule.team.permanent[team][rule.team.permanent[team].len-number..] {
+				spell.on_cast_fn.function(mut spell, mut spell_interface)
+			}
 		}
 		Deck_dead_array {
 			mut to_add := rule.team.hand[team]#[-number..]
@@ -216,11 +218,16 @@ pub fn (mut rule Rules) play_ordered(team int, number int) {
 			mut added_dead := 0
 			for id in rule.team.dead_ids {
 				rule.team.permanent[team][id] = to_add.pop()
+				rule.team.permanent[team][id].on_cast_fn.function(mut rule.team.permanent[team][id], mut
+					spell_interface)
 				added_dead += 1
 			}
 			rule.team.dead_ids = rule.team.dead_ids[added_dead..]
 			for id in 0 .. to_add.len {
+				len := rule.team.permanent[team].len
 				rule.team.permanent[team] << to_add[id]
+				rule.team.permanent[team][len].on_cast_fn.function(mut rule.team.permanent[team][len], mut
+					spell_interface)
 			}
 		}
 		else {}

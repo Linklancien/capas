@@ -208,7 +208,7 @@ pub fn (mut rule Rules) play_ordered(team int, number int, mut spell_interface S
 		Deck_classic {
 			rule.team.permanent[team] << rule.team.hand[team]#[-number..]
 			rule.team.hand[team] = rule.team.hand[team]#[..-number]
-			for mut spell in mut rule.team.permanent[team][rule.team.permanent[team].len-number..] {
+			for mut spell in mut rule.team.permanent[team][rule.team.permanent[team].len - number..] {
 				spell.on_cast_fn.function(mut spell, mut spell_interface)
 			}
 		}

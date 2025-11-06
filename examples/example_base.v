@@ -16,12 +16,27 @@ fn main() {
 	app.team_nb = 2
 	app.rule = base.init_rule_base(app.team_nb, capas.Deck_type.classic)
 
+	app.rule.add_mark(capas.Mark_config{
+		name:        'TARGET'
+		description: 'Store the target of the spell'
+		effect:      target_effect
+	})
+
 	// println(app)
-	basic_attack := fn (mut self Spell, mut rule Spell_interface) {
-		base.attack(1, mut self, mut rule)
+	basic_attack := fn (mut self Spell, mut app Spell_interface) {
+		match mut app {
+			App {
+				target_id := app.rule.get_mark_id('TARGET')
+				if self.marks[target_id] != -1 {
+					mut spell := app.rule.team.permanent[(app.team_turn + 1) % 2][self.marks[target_id]]
+					base.inflict_damage(mut spell, 1)
+				}
+			}
+			else {}
+		}
 	}
 	spell_example := Spell_const{
-		name:             'Test spell team 1'
+		name:             'Test spell'
 		on_cast_fn:       capas.Spell_fn{
 			name:     'Hello'
 			function: hello
@@ -79,4 +94,10 @@ fn (mut app App) turn() {
 
 fn hello(mut self Spell, mut app Spell_interface) {
 	println('Hello')
+}
+
+fn target_effect(id int, mut spells_list []Spell) {
+	for mut spell in spells_list {
+		spell.marks[id] == -1
+	}
 }

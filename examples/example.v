@@ -42,6 +42,10 @@ fn main() {
 			'PV':     1
 			'TARGET': -1
 		}
+		end_fn: capas.Spell_fn{
+			name:     'Goodbye'
+			function: goodbye
+		}
 	}
 	app.rule.add_spell(0, spell_example)
 	app.rule.add_spell(1, spell_example)
@@ -83,7 +87,7 @@ fn (mut app App) turn() {
 	}
 
 	app.rule.all_marks_do_effect(other_team_id)
-	app.rule.team.update_permanent()
+	app.rule.team.update_permanent(mut app)
 	println('END TURN')
 }
 
@@ -120,4 +124,8 @@ fn basic_attack(mut self Spell, mut app Spell_interface) {
 
 fn hello(mut self Spell, mut app Spell_interface) {
 	println('Hello')
+}
+
+fn goodbye(mut self Spell, mut app Spell_interface) {
+	println('Goodbye')
 }

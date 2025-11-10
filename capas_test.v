@@ -1,5 +1,10 @@
 import capas
 
+struct Use{
+mut:
+	rule capas.Rules
+}
+
 fn test_context() {
 	mut rule := capas.rule_create(1, capas.Deck_type.classic)
 
@@ -37,63 +42,65 @@ fn pv_effect(id int, mut spells_list []capas.Spell) {
 }
 
 fn test_classic_update_permanent() {
-	mut rule := capas.rule_create(1, capas.Deck_type.classic)
+	mut use := Use{}
+	use.rule = capas.rule_create(1, capas.Deck_type.classic)
 
-	rule.add_spell(0, capas.Spell_const{
+	use.rule.add_spell(0, capas.Spell_const{
 		name: 'Test spell'
 	}, capas.Spell_const{
 		name: 'Test spell'
 	})
 
-	rule.team.permanent[0] = rule.team.deck[0].clone()
-	rule.team.deck[0].clear()
+	use.rule.team.permanent[0] = use.rule.team.deck[0].clone()
+	use.rule.team.deck[0].clear()
 
-	assert rule.team.deck[0].len == 0, ".clear didn't work? ${rule.team.deck}"
+	assert use.rule.team.deck[0].len == 0, ".clear didn't work? ${use.rule.team.deck}"
 
-	rule.team.permanent[0][0].is_ended = true
-	rule.team.update_permanent()
+	use.rule.team.permanent[0][0].is_ended = true
+	use.rule.team.update_permanent(mut use)
 
-	assert rule.team.permanent[0].len == 1, 'update_permanent issue, ${name_array(rule)}'
+	assert use.rule.team.permanent[0].len == 1, 'update_permanent issue, ${name_array(use.rule)}'
 
-	rule.add_spell(0, capas.Spell_const{
+	use.rule.add_spell(0, capas.Spell_const{
 		name: 'Test spell'
 	})
 
-	rule.team.permanent[0] << rule.team.deck[0].clone()
-	rule.team.deck[0].clear()
-	rule.team.permanent[0][1].is_ended = true
-	rule.team.update_permanent()
-	assert rule.team.permanent[0].len == 1, 'update_permanent issue, ${name_array(rule)}'
+	use.rule.team.permanent[0] << use.rule.team.deck[0].clone()
+	use.rule.team.deck[0].clear()
+	use.rule.team.permanent[0][1].is_ended = true
+	use.rule.team.update_permanent(mut use)
+	assert use.rule.team.permanent[0].len == 1, 'update_permanent issue, ${name_array(use.rule)}'
 }
 
 fn test_dead_array_update_permanent() {
-	mut rule := capas.rule_create(1, capas.Deck_type.dead_array)
+	mut use := Use{}
+	use.rule = capas.rule_create(1, capas.Deck_type.dead_array)
 
-	rule.add_spell(0, capas.Spell_const{
+	use.rule.add_spell(0, capas.Spell_const{
 		name: 'Test spell'
 	}, capas.Spell_const{
 		name: 'Test spell'
 	})
 
-	rule.team.permanent[0] = rule.team.deck[0].clone()
-	rule.team.deck[0].clear()
+	use.rule.team.permanent[0] = use.rule.team.deck[0].clone()
+	use.rule.team.deck[0].clear()
 
-	assert rule.team.deck[0].len == 0, ".clear didn't work? ${rule.team.deck}"
+	assert use.rule.team.deck[0].len == 0, ".clear didn't work? ${use.rule.team.deck}"
 
-	rule.team.permanent[0][0].is_ended = true
-	rule.team.update_permanent()
+	use.rule.team.permanent[0][0].is_ended = true
+	use.rule.team.update_permanent(mut use)
 
-	assert rule.team.permanent[0].len == 2, 'update_permanent issue, ${name_array(rule)}'
+	assert use.rule.team.permanent[0].len == 2, 'update_permanent issue, ${name_array(use.rule)}'
 
-	rule.add_spell(0, capas.Spell_const{
+	use.rule.add_spell(0, capas.Spell_const{
 		name: 'Test spell'
 	})
 
-	rule.team.permanent[0] << rule.team.deck[0].clone()
-	rule.team.deck[0].clear()
-	rule.team.permanent[0][2].is_ended = true
-	rule.team.update_permanent()
-	assert rule.team.permanent[0].len == 3, 'update_permanent issue, ${name_array(rule)}'
+	use.rule.team.permanent[0] << use.rule.team.deck[0].clone()
+	use.rule.team.deck[0].clear()
+	use.rule.team.permanent[0][2].is_ended = true
+	use.rule.team.update_permanent(mut use)
+	assert use.rule.team.permanent[0].len == 3, 'update_permanent issue, ${name_array(use.rule)}'
 }
 
 fn name_array(rule capas.Rules) []string {
@@ -161,35 +168,36 @@ fn test_draw_rand() {
 fn test_play_ordered() {
 	decks_types := [capas.Deck_type.classic, capas.Deck_type.dead_array]
 	for deck_type in decks_types {
-		mut rule := capas.rule_create(1, deck_type)
+		mut use := Use{}
+		use.rule = capas.rule_create(1, deck_type)
 
-		rule.add_spell(0, capas.Spell_const{
+		use.rule.add_spell(0, capas.Spell_const{
 			name: 'Test spell'
 		}, capas.Spell_const{
 			name: 'Test spell'
 		})
 
-		rule.draw_rand(0, 1)
-		rule.play_ordered(0, 1)
+		use.rule.draw_rand(0, 1)
+		use.rule.play_ordered(0, 1,mut use)
 
-		assert rule.team.hand[0].len == 0, 'len != 1, ${deck_type}'
-		assert rule.team.permanent[0].len == 1, 'len != 1, ${deck_type}'
+		assert use.rule.team.hand[0].len == 0, 'len != 1, ${deck_type}'
+		assert use.rule.team.permanent[0].len == 1, 'len != 1, ${deck_type}'
 
-		rule.draw_rand(0, 1)
-		rule.play_ordered(0, 1)
+		use.rule.draw_rand(0, 1)
+		use.rule.play_ordered(0, 1,mut use)
 
-		assert rule.team.hand[0].len == 0, 'len != 1, ${deck_type}'
-		assert rule.team.permanent[0].len == 2, 'len != 1, ${deck_type}'
+		assert use.rule.team.hand[0].len == 0, 'len != 1, ${deck_type}'
+		assert use.rule.team.permanent[0].len == 2, 'len != 1, ${deck_type}'
 
-		rule.team.permanent[0][0].is_ended = true
-		rule.team.update_permanent()
+		use.rule.team.permanent[0][0].is_ended = true
+		use.rule.team.update_permanent(mut use)
 
 		match deck_type {
 			.classic {
-				assert rule.team.permanent[0].len == 1, 'len != 1, ${deck_type}'
+				assert use.rule.team.permanent[0].len == 1, 'len != 1, ${deck_type}'
 			}
 			.dead_array {
-				assert rule.team.permanent[0].len == 2, 'len != 1, ${deck_type}'
+				assert use.rule.team.permanent[0].len == 2, 'len != 1, ${deck_type}'
 			}
 		}
 	}

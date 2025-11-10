@@ -88,7 +88,7 @@ fn (mut app App) turn() {
 	}
 
 	app.rule.all_marks_do_effect(other_team_id)
-	app.rule.team.update_permanent()
+	app.rule.team.update_permanent(mut app)
 	println('END TURN')
 }
 

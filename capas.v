@@ -110,7 +110,7 @@ mut:
 	permanent [][]Spell
 	graveyard [][]Spell
 
-	update_permanent()
+	update_permanent(mut spell_interface Spell_interface)
 }
 
 pub struct Deck_classic {
@@ -121,13 +121,16 @@ pub mut:
 	graveyard [][]Spell
 }
 
-pub fn (mut deck Deck_classic) update_permanent() {
+pub fn (mut deck Deck_classic) update_permanent(mut spell_interface Spell_interface) {
 	for id_player in 0 .. deck.permanent.len {
 		total_len := deck.permanent[id_player].len
 		mut new_permanent := []Spell{cap: total_len}
 		mut new_graveyard := []Spell{}
 		for _ in 0 .. total_len {
-			spell := deck.permanent[id_player].pop()
+			mut spell := deck.permanent[id_player].pop()
+			if spell.is_ended{
+				spell.end_fn.function(mut spell, mut spell_interface)
+			}
 			if spell.is_ended {
 				new_graveyard << spell
 			} else {
@@ -156,15 +159,18 @@ const dead_spell = Spell{
 	is_ended: true
 }
 
-pub fn (mut deck Deck_dead_array) update_permanent() {
+pub fn (mut deck Deck_dead_array) update_permanent(mut spell_interface Spell_interface) {
 	for id_player in 0 .. deck.permanent.len {
 		total_len := deck.permanent[id_player].len
 		for id in 0 .. total_len {
 			if deck.permanent[id_player][id].is_ended
 				&& deck.permanent[id_player][id].name != 'dead spell' {
-				deck.graveyard[id_player] << deck.permanent[id_player][id]
-				deck.permanent[id_player][id] = dead_spell
-				deck.dead_ids << id
+				deck.permanent[id_player][id].end_fn.function(mut deck.permanent[id_player][id], mut spell_interface)
+				if deck.permanent[id_player][id].is_ended{
+					deck.graveyard[id_player] << deck.permanent[id_player][id]
+					deck.permanent[id_player][id] = dead_spell
+					deck.dead_ids << id
+				}
 			}
 		}
 	}
